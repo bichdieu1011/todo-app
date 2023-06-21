@@ -10,9 +10,6 @@ namespace TodoApp.Services
     {
         public static void ConfigureService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ToDoAppContext>(options =>
-                options.UseMySQL(configuration.GetConnectionString("MySqlConnection")));
-
             services.AddAutoMapper(typeof(ServiceAssembly).Assembly);
             services.RegisterAssemblyPublicNonGenericClasses(typeof(ServiceAssembly).Assembly)
                 .Where(s => !s.IsAbstract)
