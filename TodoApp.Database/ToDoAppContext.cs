@@ -6,6 +6,7 @@ namespace TodoApp.Database
     {
         public ToDoAppContext(DbContextOptions<ToDoAppContext> options) : base(options)
         {
+            //Database.setIn
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

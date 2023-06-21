@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TodoApp.Database
 {
-    public class ToDoDBInitializer : 
+    public class ToDoDBInitializer 
     {
     }
 }

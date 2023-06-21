@@ -33,7 +33,8 @@ namespace TodoApp.Services.ActionItemService
                 };
             }
 
-            var category = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == record.CategoryId);
+            var category = await dbContext.Set<Category>()
+                .SingleOrDefaultAsync(s => s.Id == record.CategoryId && s.IsActive);
             if (category is null)
             {
                 throw new Exception($"{nameof(Category)} is not found");
@@ -89,7 +90,11 @@ namespace TodoApp.Services.ActionItemService
         public async Task<List<ActionItemModel>> GetAll(int categoryId)
         {
             var res = await dbContext.Set<ActionItem>()
-                .Where(s => s.Status == (short)ActionItemStatus.Open || s.Status == (short)ActionItemStatus.Done)
+                .Where(s => 
+                       (s.Status == (short)ActionItemStatus.Open 
+                        || s.Status == (short)ActionItemStatus.Done)
+                    && s.CategoryId == categoryId 
+                    && s.Category.IsActive)
                 .OrderByDescending(s => s.End).ThenBy(s => s.Status)
                 .ToListAsync();
 

@@ -9,11 +9,15 @@ namespace TodoApp.Services.ActionItemService.Mapper
     {
         public ActionItemMapper()
         {
-            CreateMap<Category, CategoryModel>();
+            CreateMap<ActionItem, ActionItemModel>();
 
-            CreateMap<CategoryModel, Category>()
+            CreateMap<ActionItemModel, ActionItem>()
                 .ForMember(s => s.Id, x => x.Ignore())
-                .ForMember(s => s.IsActive, x => x.MapFrom(x => true));
+                .ForMember(s => s.Status, x => x.Ignore());
+
+            CreateMap<UpdateActionItemModel, ActionItem>()
+                 .ForMember(s => s.Id, x => x.Ignore())
+                 .ForMember(s => s.Status, x => x.Ignore());
 
         }
     }

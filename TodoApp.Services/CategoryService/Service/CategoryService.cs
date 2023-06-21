@@ -44,8 +44,20 @@ namespace TodoApp.Services.CategoryService.Service
             {
                 return new ActionResult
                 {
-                    Result = Result.Success,
+                    Result = Result.Error,
                     Messages = new List<string>() { "Record is not exists!" }
+                };
+            }
+
+            var checkDuplicated = dbContext.Set<Category>()
+                .Where(s => s.Name == record.Name && s.IsActive)
+                .Any();
+            if (checkDuplicated)
+            {
+                return new ActionResult
+                {
+                    Result = Result.Error,
+                    Messages = new List<string>() { "Duplicated Category!" }
                 };
             }
 
@@ -92,6 +104,15 @@ namespace TodoApp.Services.CategoryService.Service
             {
                 throw new Exception($"{nameof(Category)} is not found");
             }
+
+            var checkDuplicate = await dbContext.Set<Category>()
+                .AnyAsync(s => s.Id != record.Id && s.Name == record.Name && s.IsActive);
+            if (checkDuplicate)
+                return new ActionResult
+                {
+                    Result = Result.Success,
+                    Messages = new List<string> { "Category Name is duplicated" }
+                };
 
             mapper.Map(record, item);
             await dbContext.SaveChangesAsync();
