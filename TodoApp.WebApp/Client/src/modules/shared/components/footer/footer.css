@@ -1,0 +1,12 @@
+.todo-footer {
+    background-color: #f0f2f5;
+    padding: 30px;
+    color: #666;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}

@@ -1,0 +1,7 @@
+resource_group = "terraformtestinggroup3"
+deploy_location = "eastasia"
+environment = "stage"
+department = "web-track"
+app_source = "terraform"
+storage_account_tier = "Standard"
+storage_account_replication_type = "LRS"

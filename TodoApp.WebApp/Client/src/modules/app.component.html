@@ -1,0 +1,9 @@
+
+<div class="home-page">
+<todo-header></todo-header>
+    <div class="container">
+    <todo-category (clickViewItem)="actionItem.onViewListActionItem($event)"></todo-category>
+    <todo-actionItem #actionItem></todo-actionItem>
+</div>
+</div>
+<todo-footer></todo-footer>
