@@ -1,0 +1,43 @@
+<div class="actionItem-container" *ngIf="categoryId > 0">
+    <div class="header-line">
+        <button class="btn-add-action-item" (click)="addActionItem()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle"
+                viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+        </button>
+    </div>
+    <div class="widget-container row">
+        <tasks-widget class="today col col-md-6" [title]="'Tasks for today'" [columns]="columnsToDisplay"
+            [isEditable]="false" [isRemovable]="true" [length]="today.total" [dataSource]="today.result"
+            (onChangSorting)="changeSorting($event, 0)" (onChangPaging)="changePaging($event, 0)"
+            (onEditing)="edit($event, 0)" (onRemoving)="remove($event, 0)" (onChangeCheckbox)="onChangeCheckbox($event, 0)">
+
+        </tasks-widget>
+
+        <tasks-widget class="expired col col-md-6" [title]="'Expired tasks'" [columns]="columnsToDisplay"
+            [isEditable]="false" [isRemovable]="true" [length]="expired.total" [dataSource]="expired.result"
+            (onChangSorting)="changeSorting($event, 3)" (onChangPaging)="changePaging($event, 3)"
+            (onEditing)="edit($event, 3)" (onRemoving)="remove($event, 3)" (onChangeCheckbox)="onChangeCheckbox($event, 3)">
+
+        </tasks-widget>
+
+        <tasks-widget class="tomorrow col col-md-6" [title]="'Tasks for tomorrow'" [columns]="columnsToDisplay"
+            [isEditable]="false" [isRemovable]="true" [length]="tomorrow.total" [dataSource]="tomorrow.result"
+            (onChangSorting)="changeSorting($event, 1)" (onChangPaging)="changePaging($event, 1)"
+            (onEditing)="edit($event, 1)" (onRemoving)="remove($event, 1)" (onChangeCheckbox)="onChangeCheckbox($event, 1)">
+
+        </tasks-widget>
+
+        <tasks-widget class="thisWeek col col-md-6" [title]="'Remaining tasks for this weeks'"
+            [columns]="columnsToDisplay" [isEditable]="false" [isRemovable]="true" [length]="thisWeek.total"
+            [dataSource]="thisWeek.result" (onChangSorting)="changeSorting($event, 0)"
+            (onChangPaging)="changePaging($event, 2)" (onEditing)="edit($event, 2)" (onRemoving)="remove($event, 2)" (onChangeCheckbox)="onChangeCheckbox($event, 2)">
+
+        </tasks-widget>
+
+
+    </div>
+</div>

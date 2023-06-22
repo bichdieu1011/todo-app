@@ -2,9 +2,7 @@
 {
     public class ActionItemList
     {
-        public List<ActionItemModel> Today { get; set; }
-        public List<ActionItemModel> Tomorrow { get; set; }
-        public List<ActionItemModel> ThisWeek { get; set; }
-        public List<ActionItemModel> Expired { get; set; }
+        public List<ActionItemModel> Result { get; set; }
+        public int Total { get; set; }
     }
 }

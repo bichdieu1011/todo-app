@@ -1,0 +1,11 @@
+.notification-dialog div.information {
+    color: lightblue;
+}
+
+.notification-dialog .warning {
+    color: yellow;
+}
+
+.notification-dialog .error {
+    color: lightcoral;
+}

@@ -1,5 +1,6 @@
 import { IActionItem } from "./actionItem";
 
 export interface IActionItemList {
-    items: IActionItem[];
+    result: IActionItem[];
+    total : number;
 }

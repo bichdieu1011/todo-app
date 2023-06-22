@@ -4,3 +4,14 @@
     min-height: calc(100vh - 73px);
     flex: 1;
 }
+
+.app-container{
+    margin-right: 0px;    
+}
+
+todo-category{
+    height: calc(100vh - 120px);
+    overflow-y: auto ;
+    background-color: #f2f2f2;
+
+}

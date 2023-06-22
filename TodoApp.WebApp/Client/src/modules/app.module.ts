@@ -7,7 +7,10 @@ import { HomeModule } from './home/home.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/share.module';
 import { CategoryModule } from './category/category.module';
-import { ActionItemModule } from './action-item/actionItem.module';
+import { ActionItemModule } from './action-item/action-item.module';
+import { CdkColumnDef } from '@angular/cdk/table';
+import { NgxSpinnerService } from "ngx-spinner";
+
 
 @NgModule({
   declarations: [
@@ -17,15 +20,17 @@ import { ActionItemModule } from './action-item/actionItem.module';
     BrowserModule,
     HomeModule,
     SharedModule,
-    CategoryModule,
-    
+    CategoryModule,    
     ActionItemModule,
     HttpClientModule,
     routing
   ],
-  providers: [],
+  providers: [CdkColumnDef],
   bootstrap: [
     AppComponent
   ]
 })
-export class AppModule { }
+export class AppModule {
+
+  
+ }

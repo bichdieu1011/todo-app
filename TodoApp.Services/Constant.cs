@@ -18,7 +18,22 @@ namespace TodoApp.Services
         public enum Result
         {
             Success,
+            Warning,
             Error
+        }
+
+        public enum TaskWidgetType
+        {
+            Today,
+            Tomorrow,
+            ThisWeek,
+            Expired
+        }
+
+        public enum SortDirection
+        {
+            asc,
+            desc
         }
     }
 }

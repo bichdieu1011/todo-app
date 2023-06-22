@@ -1,0 +1,20 @@
+.action-button{
+    padding: 8px 8cap;
+    margin-left: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+tr.task-header{
+    height: 35px;
+}
+
+tr.task-row{
+    height: 30px;
+}

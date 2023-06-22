@@ -60,7 +60,8 @@ namespace TodoApp.Services.ActionItemService
                     Messages = new List<string>() { "Record is not exists" }
                 };
             }
-            dbContext.Set<ActionItem>().Remove(record);
+
+            record.Status = (short)ActionItemStatus.Removed;
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {
@@ -87,13 +88,32 @@ namespace TodoApp.Services.ActionItemService
             };
         }
 
+        public async Task<ActionResult> Edit(UpdateActionItemStatus record)
+        {
+            if (record is null)
+                throw new Exception("record is empty");
+
+            var item = await dbContext.Set<ActionItem>().SingleOrDefaultAsync(s => s.Id == record.Id);
+            if (record is null)
+            {
+                throw new Exception($"{nameof(ActionItem)} is not found");
+            }
+
+            if (item.Status != (short)record.CurrentStatus)
+                return new ActionResult { Result = Constant.Result.Warning, Messages = new List<string> { "Status is obsoleted" } };
+
+            item.Status = (short)record.NewStatus;
+            await dbContext.SaveChangesAsync();
+            return new ActionResult { Result = Constant.Result.Success };
+        }
+
         public async Task<List<ActionItemModel>> GetAll(int categoryId)
         {
             var res = await dbContext.Set<ActionItem>()
-                .Where(s => 
-                       (s.Status == (short)ActionItemStatus.Open 
+                .Where(s =>
+                       (s.Status == (short)ActionItemStatus.Open
                         || s.Status == (short)ActionItemStatus.Done)
-                    && s.CategoryId == categoryId 
+                    && s.CategoryId == categoryId
                     && s.Category.IsActive)
                 .OrderByDescending(s => s.End).ThenBy(s => s.Status)
                 .ToListAsync();
@@ -101,27 +121,74 @@ namespace TodoApp.Services.ActionItemService
             return res.Select(s => mapper.Map<ActionItemModel>(s)).ToList();
         }
 
-        public async Task<ActionItemList> GetAllByWidget(int categoryId)
+        public async Task<ActionItemList> GetAllByWidget(int categoryId, TaskWidgetType type, int skip, int take, string sortBy, string sortdirection)
         {
             var now = DateTime.Now;
+
             var today = now.ToDay();
             var tomorow = now.Tomorow();
             var thisWeek = now.ThisWeek();
 
-            var actionItemOfToday = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == categoryId && s.Start <= today.Start && s.End >= today.End).OrderBy(s => s.Status).ToListAsync();
-            var actionItemOfTomorow = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == categoryId && s.Start <= tomorow.Start && s.End >= tomorow.End && s.Status == (short)ActionItemStatus.Open).OrderBy(s => s.Status).Take(10).ToListAsync();
-            var actionItemOfThisWeek = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == categoryId && s.Start <= thisWeek.Start && s.End >= thisWeek.End && s.Status == (short)ActionItemStatus.Open).OrderBy(s => s.Status).Take(10).ToListAsync();
-            var actionItemOfExpired = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == categoryId && s.End <= today.Start && s.Status == (short)ActionItemStatus.Open).OrderBy(s => s.Status).Take(10).ToListAsync();
+            IQueryable<ActionItem> queries = dbContext.Set<ActionItem>().Where(s => s.CategoryId == categoryId && s.Status != (short)ActionItemStatus.Removed);
 
-            var res = new ActionItemList()
+            switch (type)
             {
-                Today = actionItemOfToday.Select(s => mapper.Map<ActionItemModel>(s)).ToList(),
-                Tomorrow = actionItemOfTomorow.Select(s => mapper.Map<ActionItemModel>(s)).ToList(),
-                ThisWeek = actionItemOfThisWeek.Select(s => mapper.Map<ActionItemModel>(s)).ToList(),
-                Expired = actionItemOfExpired.Select(s => mapper.Map<ActionItemModel>(s)).ToList()
-            };
+                case TaskWidgetType.Today:
+                    queries = queries.Where(s => (s.Start <= today.Start && s.End >= today.Start));
+                    break;
+
+                case TaskWidgetType.Tomorrow:
+                    queries = queries.Where(s => s.End == tomorow.Start && s.Status == (short)ActionItemStatus.Open);
+                    break;
+
+                case TaskWidgetType.ThisWeek:
+                    queries = queries.Where(s => s.Start >= today.End && s.End <= thisWeek.End && s.Status == (short)ActionItemStatus.Open);
+                    break;
+
+                case TaskWidgetType.Expired:
+                default:
+                    queries = queries.Where(s => s.End < today.Start && s.Status == (short)ActionItemStatus.Open);
+                    break;
+            }
+
+            var res = new ActionItemList();
+            res.Total = await queries.CountAsync();
+            queries = Sort(queries, sortBy, sortdirection);
+            var items = await queries.Skip(skip).Take(take).ToListAsync();
+            res.Result = items.Select(s => mapper.Map<ActionItemModel>(s)).ToList();
 
             return res;
+        }
+
+        private IQueryable<ActionItem> Sort(IQueryable<ActionItem> queries, string sortBy, string sortDirection)
+        {
+            if (string.IsNullOrWhiteSpace(sortBy))
+                sortBy = "status";
+
+            if (string.IsNullOrWhiteSpace(sortDirection))
+                sortDirection = "asc";
+
+            bool isAsc = false;
+            if (string.Compare(SortDirection.asc.ToString(), sortDirection.Trim(), true) == 0)
+                isAsc = true;
+
+            //var sortClause = $"{sortBy.Trim()} {sortDicectionValue}";
+
+            switch (sortBy.ToLower())
+            {
+                case "content":
+                    return isAsc ? queries.OrderBy(s => s.Content) : queries.OrderByDescending(s => s.Content);
+
+                case "start":
+                    return isAsc ? queries.OrderBy(s => s.Start) : queries.OrderByDescending(s => s.Start);
+
+                case "end":
+                    return isAsc ? queries.OrderBy(s => s.End) : queries.OrderByDescending(s => s.End);
+
+                default:
+
+                    return isAsc ? queries.OrderBy(s => s.Status) : queries.OrderByDescending(s => s.Status);
+            }
         }
     }
 }

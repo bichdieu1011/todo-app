@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApp.Services.ActionItemService;
 using TodoApp.Services.ActionItemService.Models;
+using static TodoApp.Services.Constant;
 
 namespace TodoApp.WebApp.Controllers
 {
@@ -32,13 +33,14 @@ namespace TodoApp.WebApp.Controllers
             }
         }
 
-        [Route("widget/{categoryId:int}")]
+        [Route("widget")]
         [HttpGet]
-        public async Task<ActionResult> GetAllActionItemByWidgetAsync(int categoryId)
+        public async Task<ActionResult> GetAllActionItemByWidgetAsync(int categoryId,
+            TaskWidgetType type, int skip, int take, string? sortBy, string? sortdirection)
         {
             try
             {
-                var result = await service.GetAllByWidget(categoryId);
+                var result = await service.GetAllByWidget(categoryId, type, skip, take, sortBy, sortdirection);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -62,9 +64,9 @@ namespace TodoApp.WebApp.Controllers
             }
         }
 
-        [Route("edit/{id:long}")]
+        [Route("editstatus/{id:long}")]
         [HttpPut]
-        public async Task<ActionResult> EditActionItemAsync(long id, [FromBody] UpdateActionItemModel model)
+        public async Task<ActionResult> UpdateActionItemStatusAsync(long id, [FromBody] UpdateActionItemStatus model)
         {
             try
             {
@@ -78,8 +80,9 @@ namespace TodoApp.WebApp.Controllers
             }
         }
 
-        [Route("delete/{id:long}")]
-        [HttpPut]
+
+        [Route("{id:long}")]
+        [HttpDelete]
         public async Task<ActionResult> DeleteActionItemAsync(long id)
         {
             try
