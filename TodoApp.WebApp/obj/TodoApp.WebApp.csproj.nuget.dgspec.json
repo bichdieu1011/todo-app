@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj": {}
+    "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\TodoApp.WebApp.csproj": {}
   },
   "projects": {
     "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.Database\\TodoApp.Database.csproj": {
@@ -156,14 +156,14 @@
         }
       }
     },
-    "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj": {
+    "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\TodoApp.WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj",
+        "projectUniqueName": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\TodoApp.WebApp.csproj",
         "projectName": "TodoApp.WebApp",
-        "projectPath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj",
+        "projectPath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\TodoApp.WebApp.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\obj\\",
+        "outputPath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

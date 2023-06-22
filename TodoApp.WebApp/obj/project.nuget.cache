@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SgylH6dV2B3T6Hphjw+eaPU79hceRAXcUEAwNrf52M8WdD68UePZUqEBFona/LGUtvS8ODoDNGvJHmPQgi4gRQ==",
+  "dgSpecHash": "W+O4ONMxjFAfxKjoSAxve7yiKOWr/4A+FeANrgW52kk5RZJjqb5UQagLv9iYLcr3cvYt7HqsikvyzUz4QEseJQ==",
   "success": true,
-  "projectFilePath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj",
+  "projectFilePath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\ToDoApp.WebApp\\TodoApp.WebApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

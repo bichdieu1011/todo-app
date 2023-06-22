@@ -1,2 +1,0 @@
-add-migration initialmigration -verbose
-dotnet ef database update --verbose --project ToDoApp.DataBase   --startup-project ToDoApp.WebApp
