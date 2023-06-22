@@ -107,6 +107,7 @@ namespace TodoApp.Services.CategoryService.Service
 
             var checkDuplicate = await dbContext.Set<Category>()
                 .AnyAsync(s => s.Id != record.Id && s.Name == record.Name && s.IsActive);
+
             if (checkDuplicate)
                 return new ActionResult
                 {

@@ -36,7 +36,7 @@ export class AddActionItemComponent implements OnInit {
             'content': [this.record.content, Validators.required],
             'start': [this.record.start, Validators.required],
             'end': [this.record.end, Validators.required],
-        },{validators : this.checkDates});
+        },{validators : [this.checkDates,this.checkString]});
         
     }
 
@@ -51,8 +51,19 @@ export class AddActionItemComponent implements OnInit {
         return null;
     }
 
+    checkString(group: FormGroup) {
+        if (group.controls['content'].value.trim().length == 0) {
+            return { notValid: true }
+        }
+        return null;
+    }
+
     onSaveClick(): void {
         this.spinner.show();
+        this.record.content = this.newItemForm.controls['content'].value.trim();
+        this.record.start = this.newItemForm.controls['start'].value;
+        this.record.end = this.newItemForm.controls['end'].value;
+
         this.actionItemService.add(this.record).subscribe(res => {
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
@@ -74,7 +85,5 @@ export class AddActionItemComponent implements OnInit {
 
     }
 
-    get isValid() {  
-        return this.newItemForm.valid;
-     }
+   
 }

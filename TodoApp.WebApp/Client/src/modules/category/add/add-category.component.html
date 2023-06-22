@@ -1,11 +1,12 @@
-
+<form [formGroup]="newCategoryForm" (ngSubmit)="onSaveClick()">
 <div mat-dialog-content>
   <p>Category name?</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="categoryName" >
+    <input matInput formControlName="categoryName"  >
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button  (click)="onSaveClick()" cdkFocusInitial>Ok</button>
+  <button mat-button  type="submit"  [disabled]="!newCategoryForm.valid" cdkFocusInitial>Ok</button>
 </div>
+</form>

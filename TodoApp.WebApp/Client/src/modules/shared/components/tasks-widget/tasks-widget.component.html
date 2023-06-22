@@ -8,7 +8,7 @@
             <div *ngIf="column.type == 0">{{ item[column.fieldName] }}</div>
             <div *ngIf="column.type == 1">{{ item[column.fieldName] | dateDisplay }}</div>
             <div *ngIf="column.type == 2">
-                <mat-checkbox class="example-margin" (value)="item[column.fieldName]" (change)="changeCheckbox($event, item, column.fieldName)" ></mat-checkbox> 
+                <mat-checkbox class="example-margin" [checked]="item[column.fieldName]" (change)="changeCheckbox($event, item, column.fieldName)" ></mat-checkbox> 
             </div>
 
         </td>

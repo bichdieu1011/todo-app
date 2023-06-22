@@ -5,8 +5,11 @@ import { CategoryService } from "./category.service";
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog, DialogPosition, MatDialogConfig } from '@angular/material/dialog';
 import { AddTodoCategoryComponent } from "./add/add-category.component";
-
-
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { IMessage } from "../shared/models/IMessage";
+import { Result } from "../shared/enums/Result";
+import { NotificationType } from "../shared/enums/NotificationType";
+import { NotificationPopupComponent } from "../shared/components/notification/notification.component";
 
 @Component({
     selector: "todo-category",
@@ -26,19 +29,16 @@ export class CategoryComponent implements OnInit {
     clickAddNewCategory = new EventEmitter<void>();
 
     constructor(private categoryService: CategoryService,
-        public dialog: MatDialog) {
+        public dialog: MatDialog,
+        private _snackBar: MatSnackBar
+        ) {
     }
-
-
-
 
     ngOnInit(): void {
         this.loadData();
     }
 
     loadData(): void {
-        // this.categories = [{ id: 1, name: "Item 1" }, { id: 2, name: "Item 2" }];
-        // return;
         this.categoryService.getAll().subscribe(item => {
             this.categories = item;
         });
@@ -50,9 +50,6 @@ export class CategoryComponent implements OnInit {
     }
 
     addNewCategory(): void {
-        // this.clickAddNewCategory.emit();
-        // this.bottomSheet.open(AddTodoCategoryComponent);
-
         const dialogRef = this.dialog.open(AddTodoCategoryComponent, { height: '240px' });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -65,6 +62,17 @@ export class CategoryComponent implements OnInit {
     }
 
     deleteCategory(item: ICategoryItem): void {
-
+        this.categoryService.delete(item).subscribe(res =>{
+            let notification: IMessage = {
+                type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
+                message: res.result == Result.Success ? ["Remove succesfully"] : res.messages
+            };
+            this._snackBar.openFromComponent(NotificationPopupComponent, {
+                data: notification,
+                duration: 3000
+            });
+            this.loadData();
+            this.clickViewItem.emit(0);
+        });
     }
 }

@@ -9,8 +9,8 @@
         </svg>
     </button>
     <div class="todo-categories-ul">
-        <div class="todo-category-item-li" *ngFor="let item of categories" (click)="viewActionItem(item)">
-            <h4 class="title">{{item.name}}</h4>
+        <div class="todo-category-item-li" *ngFor="let item of categories" >
+            <h4 class="title" (click)="viewActionItem(item)">{{item.name}}</h4>
             <button *ngIf="false" class="action-button" (click)="editCategory(item)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil"
                     viewBox="0 0 16 16">

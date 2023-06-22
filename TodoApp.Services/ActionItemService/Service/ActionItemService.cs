@@ -28,10 +28,18 @@ namespace TodoApp.Services.ActionItemService
             {
                 return new ActionResult
                 {
-                    Result = Constant.Result.Success,
+                    Result = Result.Success,
                     Messages = new List<string>() { "Record is not exists!" }
                 };
             }
+
+            var validate = Validate(record);
+            if (!string.IsNullOrEmpty(validate))
+                return new ActionResult
+                {
+                    Result = Result.Error,
+                    Messages = new List<string>() { validate }
+                };
 
             var category = await dbContext.Set<Category>()
                 .SingleOrDefaultAsync(s => s.Id == record.CategoryId && s.IsActive);
@@ -45,8 +53,17 @@ namespace TodoApp.Services.ActionItemService
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {
-                Result = Constant.Result.Success
+                Result = Result.Success
             };
+        }
+
+        private string Validate(ActionItemModel record)
+        {
+            if (string.IsNullOrWhiteSpace(record.Content))
+                return "Content is required";
+            if (record.Start > record.End)
+                return "Start date must be less than or equal to End date";
+            return string.Empty;
         }
 
         public async Task<ActionResult> Delete(long recordId)
@@ -65,7 +82,7 @@ namespace TodoApp.Services.ActionItemService
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {
-                Result = Constant.Result.Success
+                Result = Result.Success
             };
         }
 
@@ -84,8 +101,17 @@ namespace TodoApp.Services.ActionItemService
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {
-                Result = Constant.Result.Success
+                Result = Result.Success
             };
+        }
+
+        private string Validate(UpdateActionItemModel record)
+        {
+            if (string.IsNullOrWhiteSpace(record.Content))
+                return "Content is required";
+            if (record.Start > record.End)
+                return "Start date must be less than or equal to End date";
+            return string.Empty;
         }
 
         public async Task<ActionResult> Edit(UpdateActionItemStatus record)

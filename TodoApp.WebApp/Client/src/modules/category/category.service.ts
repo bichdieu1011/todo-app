@@ -17,17 +17,27 @@ export class CategoryService {
         let url = this.baseUrl + 'category/all';
 
         return this.http.get(url).pipe<ICategoryItem[]>(
-            tap((res: any) => {                
+            tap((res: any) => {
                 return res;
             })
         );
     }
 
-    add(record : ICategoryItem): Observable<IActionResultModel> {
+    add(record: ICategoryItem): Observable<IActionResultModel> {
         let url = this.baseUrl + 'category';
 
         return this.http.post(url, record).pipe<IActionResultModel>(
-            tap((res: any) => {                
+            tap((res: any) => {
+                return res;
+            })
+        );
+    }
+
+    delete(record: ICategoryItem): Observable<IActionResultModel> {
+        let url = this.baseUrl + 'category/' + record.id;
+
+        return this.http.delete(url).pipe<IActionResultModel>(
+            tap((res: any) => {
                 return res;
             })
         );
@@ -47,7 +57,7 @@ export class CategoryService {
         }
 
         // return an observable with a user-facing error message
-        var res :IActionResultModel = {result:Result.Error, messages : ["An error occurs!"]};
+        var res: IActionResultModel = { result: Result.Error, messages: ["An error occurs!"] };
         return res;
     }
 }

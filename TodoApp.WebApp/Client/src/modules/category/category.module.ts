@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddTodoCategoryComponent } from "./add/add-category.component";
 
@@ -26,7 +26,8 @@ import { AddTodoCategoryComponent } from "./add/add-category.component";
         MatInputModule,
         MatButtonModule,
         MatSnackBarModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [CategoryComponent, AddTodoCategoryComponent],
     providers: [CategoryService],

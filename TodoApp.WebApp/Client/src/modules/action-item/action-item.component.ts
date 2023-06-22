@@ -51,10 +51,10 @@ export class ActionItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.widgetDetails = [
-            { pageSize: 5, pageIndex: 0, sortby: "", sortDirection: "" },
-            { pageSize: 5, pageIndex: 0, sortby: "", sortDirection: "" },
-            { pageSize: 5, pageIndex: 0, sortby: "", sortDirection: "" },
-            { pageSize: 5, pageIndex: 0, sortby: "", sortDirection: "" }
+            { pageSize: 3, pageIndex: 0, sortby: "", sortDirection: "" },
+            { pageSize: 3, pageIndex: 0, sortby: "", sortDirection: "" },
+            { pageSize: 3, pageIndex: 0, sortby: "", sortDirection: "" },
+            { pageSize: 3, pageIndex: 0, sortby: "", sortDirection: "" }
         ];
     }
 

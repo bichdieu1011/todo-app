@@ -7,6 +7,7 @@ import { NotificationPopupComponent } from "src/modules/shared/components/notifi
 import { IMessage } from "src/modules/shared/models/IMessage";
 import { NotificationType } from "src/modules/shared/enums/NotificationType";
 import { Result } from "src/modules/shared/enums/Result";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 
 @Component({
     selector: "add-todo-category",
@@ -15,24 +16,38 @@ import { Result } from "src/modules/shared/enums/Result";
 })
 
 export class AddTodoCategoryComponent {
-    categoryName: string;
+
+    newCategoryForm: FormGroup;
     @Output()
     afterAddNewCategory = new EventEmitter();
 
     constructor(public dialogRef: MatDialogRef<AddTodoCategoryComponent>,
         private categoryService: CategoryService,
-        private _snackBar: MatSnackBar) {
-        this.categoryName = '';
+        private _snackBar: MatSnackBar,
+        private fb: FormBuilder) {
+
+        this.newCategoryForm = this.fb.group({
+            'categoryName': ['', Validators.required]
+        }, { validators: this.checkString });
     }
+
+    checkString(group: FormGroup) {
+        if (group.controls['categoryName'].value.trim().length == 0) {
+            return { notValid: true }
+        }
+        return null;
+    }
+
 
     onSaveClick(): void {
         // save
-        let record: ICategoryItem = { id: 0, name: this.categoryName };
+
+        let record: ICategoryItem = { id: 0, name: this.newCategoryForm.controls['categoryName'].value.trim() };
         this.categoryService.add(record).subscribe(res => {
-            let notification :IMessage = { 
-                type : res.result == Result.Error ?  NotificationType.Error :  NotificationType.Information,
-                message : res.result == Result.Success ? ["Save succesfully"] : res.messages
-            }    ;
+            let notification: IMessage = {
+                type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
+                message: res.result == Result.Success ? ["Save succesfully"] : res.messages
+            };
             this._snackBar.openFromComponent(NotificationPopupComponent, {
                 data: notification,
                 duration: 3000
@@ -40,7 +55,7 @@ export class AddTodoCategoryComponent {
             this.afterAddNewCategory.emit();
             this.dialogRef.close();
         });
-        
+
     }
 
     onNoClick(): void {
