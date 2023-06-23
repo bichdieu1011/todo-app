@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { IActionItem } from "../action-item/model/actionItem";
+import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ICategoryItem } from "./model/categoryItem.model";
 import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
+import {environment } from "../../environment/environment"
 
 @Injectable()
 export class CategoryService {
-    private baseUrl: string = 'https://localhost:7142/';
+    private baseUrl: string = environment.baseUrl;
     constructor(private http: HttpClient) { }
 
 

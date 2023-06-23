@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace TodoApp.Database
 {
@@ -6,7 +7,6 @@ namespace TodoApp.Database
     {
         public ToDoAppContext(DbContextOptions<ToDoAppContext> options) : base(options)
         {
-            //Database.setIn
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

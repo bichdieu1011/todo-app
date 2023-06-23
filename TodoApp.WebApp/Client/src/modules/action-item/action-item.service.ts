@@ -3,18 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { IActionItem } from "../action-item/model/actionItem";
-
 import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
-import { IActionItemWidget } from "./model/actionItemWidget";
 import { IActionItemList } from "./model/actionItemList";
 import { WidgetType } from "../shared/enums/WidgetType";
 import { UpdateActionItemStatus } from "./model/updateActionItemStatusModel";
 import { ActionItemStatus } from "../shared/enums/ActionItemStatus";
+import { environment } from "../../environment/environment"
+
 
 @Injectable()
 export class ActionItemService {
-    private baseUrl: string = 'https://localhost:7142/';
+    private baseUrl: string = environment.baseUrl;
     constructor(private http: HttpClient) { }
 
 
