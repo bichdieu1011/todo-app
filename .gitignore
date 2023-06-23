@@ -1,7 +1,7 @@
 .vs
 bin/
 Debug/
-/obj/
+obj/
 TestResults/
 PublishProfiles/
 Properties/
