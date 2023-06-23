@@ -1,4 +1,6 @@
+import {  } from "node:process";
+
 export const environment = {
   production: true,
-  baseUrl: '#{baseUrl}#'
+  baseUrl: process.env['baseUrl'] 
 };

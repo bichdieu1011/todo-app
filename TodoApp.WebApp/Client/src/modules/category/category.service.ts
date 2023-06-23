@@ -5,11 +5,11 @@ import { tap } from 'rxjs/operators';
 import { ICategoryItem } from "./model/categoryItem.model";
 import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
-import {environment } from "../../environment/environment"
-
+import { environment } from "../../environment/environment"
+import {  } from "node:process";
 @Injectable()
 export class CategoryService {
-    private baseUrl: string = environment.baseUrl;
+    private baseUrl: string = environment.baseUrl as string;
     constructor(private http: HttpClient) { }
 
 
