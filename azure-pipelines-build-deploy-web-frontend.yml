@@ -24,7 +24,13 @@ jobs:
   
   - checkout: self
     submodules: true
-
+  - task: UseNode@1
+    inputs:
+      version: 18.16.0
+  - task: Npm@1
+    inputs:
+      command: install
+      workingDir: /ToDoApp.WebApp.Client
   - task: AzureStaticWebApp@0
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
