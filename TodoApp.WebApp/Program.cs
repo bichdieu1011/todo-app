@@ -60,14 +60,20 @@ using TodoApp.WebApp;
 //    }
 //    return builder.Build();
 //}
-
-var host = BuildWebHost(args);
-host.MigrateDbContext<ToDoAppContext>((context, services) =>
+try
 {
-    //add custom seed data here
-});
+    var host = BuildWebHost(args);
+    host.MigrateDbContext<ToDoAppContext>((context, services) =>
+    {
+        //add custom seed data here
+    });
 
-host.Run();
+    host.Run();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Program exception: "+ ex.ToString());
+}
 
 static IWebHost BuildWebHost(string[] args)
 {
@@ -75,7 +81,7 @@ static IWebHost BuildWebHost(string[] args)
            .ConfigureAppConfiguration((builderContext, config) =>
            {
                var configuration = config.Build();
-               if (builderContext.HostingEnvironment.IsProduction())
+               //if (builderContext.HostingEnvironment.IsProduction())
                //if (true)
                {
                    var credential = new ClientSecretCredential(configuration["Secret:TenantId"], configuration["Secret:ClientId"], configuration["Secret:ClientSecret"]);
