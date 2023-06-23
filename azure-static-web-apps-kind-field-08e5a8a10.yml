@@ -21,6 +21,16 @@ jobs:
   
   - checkout: self
     submodules: true
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+      npm install
+      npm run build --configuration=prduction --baseUrl=$(baseUrl)
+      env:
+        baseUrl: $(baseUrl)
+   
+      
   - task: AzureStaticWebApp@0
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
