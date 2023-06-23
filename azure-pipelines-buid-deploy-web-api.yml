@@ -10,6 +10,7 @@ trigger:
   paths:
     exclude:
       - TodoApp.WebApp/Client
+      - azure-static-web-apps-kind-field-08e5a8a10.yml
 
 pool:
   vmImage: 'windows-latest'
