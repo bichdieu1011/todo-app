@@ -12,7 +12,7 @@ trigger:
       - TodoApp.WebApp/Client
       - Terraform
       - Script
-      - azure-static-web-apps-kind-field-08e5a8a10.yml
+      - azure-pipelines-build-deploy-web-frontend.yml
 
 pool:
   vmImage: 'windows-latest'
