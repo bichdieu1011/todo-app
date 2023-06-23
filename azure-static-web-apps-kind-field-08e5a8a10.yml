@@ -31,7 +31,7 @@ jobs:
   - task: Bash@3
     inputs:
       targetType: "inline"
-      script: npm link @angular/cli
+      script: npm install -g @angular/cli
   - task: AzureStaticWebApp@0
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
