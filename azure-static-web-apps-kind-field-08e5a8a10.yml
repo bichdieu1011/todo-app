@@ -26,8 +26,8 @@ jobs:
         baseUrl: $(baseUrl)
     inputs:
       targetType: 'inline'
-      script: >
-      npm install >
+      script: |
+      npm install ^
       npm run build --configuration=production --baseUrl=$(baseUrl)
 
   - task: AzureStaticWebApp@0
