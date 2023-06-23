@@ -4,7 +4,11 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+  branches:
+    - master
+  paths:
+    exclude:
+      - TodoApp.WebApp/Client
 
 pool:
   vmImage: 'windows-latest'
