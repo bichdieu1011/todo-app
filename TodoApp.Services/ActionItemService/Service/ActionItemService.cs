@@ -86,34 +86,6 @@ namespace TodoApp.Services.ActionItemService
             };
         }
 
-        public async Task<ActionResult> Edit(UpdateActionItemModel record)
-        {
-            if (record is null)
-                throw new Exception("record is empty");
-
-            var item = await dbContext.Set<ActionItem>().SingleOrDefaultAsync(s => s.Id == record.Id);
-            if (record is null)
-            {
-                throw new Exception($"{nameof(ActionItem)} is not found");
-            }
-
-            mapper.Map(record, item);
-            await dbContext.SaveChangesAsync();
-            return new ActionResult
-            {
-                Result = Result.Success
-            };
-        }
-
-        private string Validate(UpdateActionItemModel record)
-        {
-            if (string.IsNullOrWhiteSpace(record.Content))
-                return "Content is required";
-            if (record.Start > record.End)
-                return "Start date must be less than or equal to End date";
-            return string.Empty;
-        }
-
         public async Task<ActionResult> Edit(UpdateActionItemStatus record)
         {
             if (record is null)

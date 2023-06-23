@@ -8,7 +8,6 @@ namespace TodoApp.Services.ActionItemService
     {
         Task<ActionResult> Add(ActionItemModel record);
 
-        Task<ActionResult> Edit(UpdateActionItemModel record);
         Task<ActionResult> Edit(UpdateActionItemStatus record);
 
         Task<ActionResult> Delete(long recordId);

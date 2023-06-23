@@ -47,37 +47,6 @@ namespace TodoApp.WebApp.Controllers
             }
         }
 
-        //[Route("deactivate/{id:int}")]
-        //[HttpPut]
-        //public async Task<ActionResult> EditCategoryAsync(int id, [FromBody] CategoryModel model)
-        //{
-        //    try
-        //    {
-        //        model.Id = id;
-        //        var result = await service.Edit(model);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-
-        //[Route("activate/{id:int}")]
-        //[HttpPut]
-        //public async Task<ActionResult> ActivateCategoryAsync(int id)
-        //{
-        //    try
-        //    {
-        //        var result = await service.Activate(id);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-
         [Route("{id:int}")]
         [HttpDelete]
         public async Task<ActionResult> DeactivateCategoryAsync(int id)

@@ -18,11 +18,14 @@ namespace TodoApp.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             //services.ConfigureDatabase(Configuration);
+
             services
-                .AddDbContext<ToDoAppContext>(s =>
+                .AddDbContext<ToDoAppContext>((s, o) =>
             {
+                var logger = s.GetRequiredService<ILogger<Startup>>();
                 var connectionString = Configuration["ConnectionString:SQL"];
-                s.UseSqlServer(connectionString);
+                logger.LogInformation("connections tring: " + connectionString);
+                o.UseSqlServer(connectionString);
             })
             .AddDbContextFactory<ToDoAppContext>(optionsBuilder =>
             {
@@ -55,10 +58,10 @@ namespace TodoApp.WebApp
         {
             // Configure the HTTP request pipeline.
             app.UseSwagger();
-
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDoAppAPI v1"));
+            app.UseHsts();
             if (env.IsDevelopment())
             {
-                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();

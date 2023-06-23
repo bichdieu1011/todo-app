@@ -18,21 +18,6 @@ namespace TodoApp.WebApp.Controllers
             this.service = service;
         }
 
-        [Route("all/{categoryId:int}")]
-        [HttpGet]
-        public async Task<ActionResult> GetAllActionItemAsync(int categoryId)
-        {
-            try
-            {
-                var result = await service.GetAll(categoryId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
-        }
-
         [Route("widget")]
         [HttpGet]
         public async Task<ActionResult> GetAllActionItemByWidgetAsync(int categoryId,

@@ -14,52 +14,12 @@
             public DateTime End { get; set; }
         }
 
-        //public static DateRange ThisYear(DateTime date)
-        //{
-        //    DateRange range = new DateRange();
-
-        //    range.Start = new DateTime(date.Year, 1, 1);
-        //    range.End = range.Start.AddYears(1).AddSeconds(-1);
-
-        //    return range;
-        //}
-
-        //public static DateRange LastYear(DateTime date)
-        //{
-        //    DateRange range = new DateRange();
-
-        //    range.Start = new DateTime(date.Year - 1, 1, 1);
-        //    range.End = range.Start.AddYears(1).AddSeconds(-1);
-
-        //    return range;
-        //}
-
-        //public static DateRange ThisMonth(DateTime date)
-        //{
-        //    DateRange range = new DateRange();
-
-        //    range.Start = new DateTime(date.Year, date.Month, 1);
-        //    range.End = range.Start.AddMonths(1).AddSeconds(-1);
-
-        //    return range;
-        //}
-
-        //public static DateRange LastMonth(DateTime date)
-        //{
-        //    DateRange range = new DateRange();
-
-        //    range.Start = (new DateTime(date.Year, date.Month, 1)).AddMonths(-1);
-        //    range.End = range.Start.AddMonths(1).AddSeconds(-1);
-
-        //    return range;
-        //}
-
         public static DateRange ToDay(this DateTime date)
         {
             DateRange range = new DateRange();
 
-            range.Start = DateTime.Today;
-            range.End = range.Start.AddHours(23).AddSeconds(59);
+            range.Start = date.Date;
+            range.End = range.Start.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             return range;
         }
@@ -68,8 +28,8 @@
         {
             DateRange range = new DateRange();
 
-            range.Start = DateTime.Today.AddDays(1);
-            range.End = range.Start.AddHours(23).AddSeconds(59);
+            range.Start = date.AddDays(1);
+            range.End = range.Start.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             return range;
         }
@@ -84,14 +44,5 @@
             return range;
         }
 
-        //public static DateRange LastWeek(DateTime date)
-        //{
-        //    DateRange range = ThisWeek(date);
-
-        //    range.Start = range.Start.AddDays(-7);
-        //    range.End = range.End.AddDays(-7);
-
-        //    return range;
-        //}
     }
 }

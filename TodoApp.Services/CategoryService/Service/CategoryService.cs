@@ -22,22 +22,6 @@ namespace TodoApp.Services.CategoryService.Service
             this.mapper = mapper;
         }
 
-        public async Task<ActionResult> Activate(int id)
-        {
-            var item = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == id);
-            if (item is null)
-            {
-                throw new Exception($"{nameof(Category)} is not found");
-            }
-
-            item.IsActive = true;
-            await dbContext.SaveChangesAsync();
-            return new ActionResult
-            {
-                Result = Result.Success
-            };
-        }
-
         public async Task<ActionResult> Add(CategoryModel record)
         {
             if (record is null)
@@ -87,35 +71,6 @@ namespace TodoApp.Services.CategoryService.Service
                 item.Status = (short)ActionItemStatus.Removed;
             }
 
-            await dbContext.SaveChangesAsync();
-            return new ActionResult
-            {
-                Result = Result.Success
-            };
-        }
-
-        public async Task<ActionResult> Edit(CategoryModel record)
-        {
-            if (record is null)
-                throw new Exception("record is empty");
-
-            var item = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == record.Id);
-            if (item is null)
-            {
-                throw new Exception($"{nameof(Category)} is not found");
-            }
-
-            var checkDuplicate = await dbContext.Set<Category>()
-                .AnyAsync(s => s.Id != record.Id && s.Name == record.Name && s.IsActive);
-
-            if (checkDuplicate)
-                return new ActionResult
-                {
-                    Result = Result.Success,
-                    Messages = new List<string> { "Category Name is duplicated" }
-                };
-
-            mapper.Map(record, item);
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {

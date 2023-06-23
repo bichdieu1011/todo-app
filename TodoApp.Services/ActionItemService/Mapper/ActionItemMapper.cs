@@ -19,10 +19,6 @@ namespace TodoApp.Services.ActionItemService.Mapper
                 .ForMember(s => s.Created, x => x.MapFrom(s => DateTime.Now))
                 .ForMember(s => s.Updated, x => x.MapFrom(s => DateTime.Now));
 
-            CreateMap<UpdateActionItemModel, ActionItem>()
-                 .ForMember(s => s.Id, x => x.Ignore())                 
-                 .ForMember(s => s.Updated, x => x.MapFrom(s => DateTime.Now))
-                 .ForMember(s => s.Created, x => x.UseDestinationValue());
         }
     }
 }
