@@ -28,6 +28,7 @@ jobs:
       app_location: "/TodoApp.WebApp/Client" # App source code path
       api_location: "TodoApp.WebApp" # Api source code path - optional
       output_location: "" # Built app content directory - optional
+      app_artifact_location: "dist/" # Built app content directory - optional
       skip_api_build: true
 ###### End of Repository/Build Configurations ######
 
