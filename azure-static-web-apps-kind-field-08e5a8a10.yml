@@ -34,7 +34,8 @@ jobs:
       output_location: "dist/todoapp.client" # Built app content directory - optional
       app_artifact_location: "" # Built app content directory - optional
       skip_api_build: true
-      app_build_command: npm run build --configuration=production --baseUrl=$(TD_BASE_URL)
+      app_build_command: npm run build --configuration=production --baseUrl=$(TD_BASE_URL) --NODE_ENV=production
     env:
       baseUrl: $(TD_BASE_URL)
+      NODE_ENV: production
 ###### End of Repository/Build Configurations ######
