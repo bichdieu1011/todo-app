@@ -37,7 +37,8 @@ steps:
   displayName: Run testing script
   inputs:
     targetType: "inline"
-    script: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    script: dotnet ef database update --verbose --project ../ToDoApp.DataBase   --startup-project ../ToDoApp.WebApp
+    
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
