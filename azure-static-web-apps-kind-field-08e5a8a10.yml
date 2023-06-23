@@ -24,6 +24,10 @@ jobs:
   
   - checkout: self
     submodules: true
+  - task: Bash@3
+    inputs:
+      targetType: "inline"
+      script: npm cache clean --force
   - task: NodeTool@0
   - task: Npm@0
     inputs:
