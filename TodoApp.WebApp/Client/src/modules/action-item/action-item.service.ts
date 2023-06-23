@@ -14,7 +14,8 @@ import { environment } from "../../environment/environment"
 
 @Injectable()
 export class ActionItemService {
-    private baseUrl: string = environment.baseUrl as string;
+    private baseUrl: string = process.env['baseUrl'] as string;
+
     constructor(private http: HttpClient) { }
 
 

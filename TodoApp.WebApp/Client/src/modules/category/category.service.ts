@@ -9,7 +9,7 @@ import { environment } from "../../environment/environment"
 import {  } from "node:process";
 @Injectable()
 export class CategoryService {
-    private baseUrl: string = environment.baseUrl as string;
+    private baseUrl: string = process.env['baseUrl'] as string;
     constructor(private http: HttpClient) { }
 
 
