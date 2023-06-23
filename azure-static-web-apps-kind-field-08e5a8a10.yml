@@ -26,8 +26,8 @@ jobs:
       targetType: 'inline'
       script: |
       npm install
-      npm run build --configuration=prduction --baseUrl=$(baseUrl)
-      env:
+      npm run build --configuration=production --baseUrl=$(baseUrl)
+    env:
         baseUrl: $(baseUrl)
    
       
