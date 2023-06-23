@@ -42,6 +42,6 @@ steps:
     azureSubscription: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
     appType: 'webApp'
     appName: 'demotdapp-be'
-    package: ' $(System.DefaultWorkingDirectory)/**/WebApp.zip'
+    package: ' $(buid.artifactStagingDirectory)/**/WebApp.zip'
     deploymentMethod: 'auto'
 
