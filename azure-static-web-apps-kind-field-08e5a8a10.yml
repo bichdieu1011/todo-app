@@ -22,6 +22,7 @@ jobs:
   - checkout: self
     submodules: true
   - task: Bash@3
+    displayName: run script to install node and run build
     env:
         baseUrl: $(baseUrl)
     inputs:
@@ -29,8 +30,9 @@ jobs:
       bashEnvValue: 
         baseUrl : "$(baseUrl)"
       script: |
-      npm install ^
-      npm run build --configuration=production --baseUrl=$(baseUrl)
+        npm install ^
+        npm run build --configuration=production --baseUrl=$(baseUrl)
+
 
   - task: AzureStaticWebApp@0
     inputs:
