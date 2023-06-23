@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  baseUrl: "https://localhost:7142/"
+  TD_BASE_URL: "https://localhost:7142/"
 };
