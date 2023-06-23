@@ -28,10 +28,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: Bash@3
+  displayName: Run testing script
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    targetType: "inline"
+    script: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
