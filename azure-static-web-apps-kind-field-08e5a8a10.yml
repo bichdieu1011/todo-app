@@ -30,7 +30,7 @@ jobs:
     inputs:
       versionSource: spec
       versionSpec: 18.16.0
-  - script: npm install
+  
 
   - task: AzureStaticWebApp@0
     inputs:
