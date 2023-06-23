@@ -32,4 +32,18 @@ jobs:
       app_artifact_location: "" # Built app content directory - optional
       skip_api_build: true
 ###### End of Repository/Build Configurations ######
+  - task: replacetokens@5
+    inputs:
+      targetFiles: '**/dist/todoapp.client/**/main**.js'
+      encoding: 'auto'
+      tokenPattern: 'default'
+      writeBOM: true
+      verbosity: 'detailed'
+      actionOnMissing: 'warn'
+      keepToken: false
+      actionOnNoFiles: 'continue'
+      enableTransforms: false
+      enableRecursion: false
+      useLegacyPattern: false
+      enableTelemetry: true
 
