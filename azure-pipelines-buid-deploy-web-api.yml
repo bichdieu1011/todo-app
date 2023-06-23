@@ -36,12 +36,15 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task : PublishBuildArtifacts@1
+  inputs:
+    TargetPath: '$(System.DefaultWorkingDirectory)/WebApp.zip'
   
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
     appType: 'webApp'
     appName: 'demotdapp-be'
-    package: '**/WebApp.zip'
+    package: '$(System.DefaultWorkingDirectory)/WebApp.zip'
     deploymentMethod: 'auto'
 
