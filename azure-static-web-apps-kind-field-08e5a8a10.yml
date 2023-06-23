@@ -27,8 +27,6 @@ jobs:
         baseUrl: $(baseUrl)
     inputs:
       targetType: inline
-      bashEnvValue: 
-        baseUrl : "$(baseUrl)"
       script: |
         npm install ^
         npm run build --configuration=production --baseUrl=$(baseUrl)
