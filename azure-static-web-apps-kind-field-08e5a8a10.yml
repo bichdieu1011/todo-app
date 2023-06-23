@@ -28,6 +28,8 @@ jobs:
     inputs:
       targetType: "inline"
       script: npm cache clean --force
+      
+  - script: npm install @angular/cli -g
   - task: NodeTool@0
   - task: Npm@0
     inputs:
