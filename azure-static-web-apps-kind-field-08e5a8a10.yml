@@ -28,6 +28,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
+        cd ToDoApp.WebApp/Client
         npm install
         npm run build --configuration=production --baseUrl=$(baseUrl)
 
