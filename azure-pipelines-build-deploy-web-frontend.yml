@@ -1,0 +1,42 @@
+name: Azure Static Web Apps CI/CD
+
+pr:
+  branches:
+    include:
+      - master
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - TodoApp.WebApp/Client
+
+jobs:
+- job: build_and_deploy_job
+  displayName: Build and Deploy Job
+  condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
+  pool:
+    vmImage: ubuntu-latest
+  variables:
+  - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
+  steps:
+  
+  - checkout: self
+    submodules: true
+
+  - task: AzureStaticWebApp@0
+    inputs:
+      azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
+###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+# For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+      app_location: "/TodoApp.WebApp/Client" # App source code path
+      api_location: "" # Api source code path - optional
+      output_location: "dist/todoapp.client" # Built app content directory - optional
+      app_artifact_location: "" # Built app content directory - optional
+      skip_api_build: true
+      app_build_command: npm run build --configuration=production --baseUrl=$(TD_BASE_URL)
+    env:
+      baseUrl: $(TD_BASE_URL)
+      NODE_ENV: production
+###### End of Repository/Build Configurations ######
