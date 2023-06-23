@@ -11,8 +11,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
+          "executor": "@nx/angular:webpack-browser",
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {            
+            "customWebpackConfig":{
+              "path": "./custom-webpack.config.js"
+            },
             "outputPath": "dist/todoapp.client",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -67,7 +71,8 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "executor": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "todoapp.client:build:production"
