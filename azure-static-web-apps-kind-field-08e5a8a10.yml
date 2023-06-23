@@ -8,6 +8,9 @@ trigger:
   branches:
     include:
       - master
+  paths:
+    include:
+      - TodoApp.WebApp/Client
 
 jobs:
 - job: build_and_deploy_job
