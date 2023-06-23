@@ -36,11 +36,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: Bash@3
-  displayName: Run testing script
-  inputs:
-    targetType: "inline"
-    script: dotnet ef database update --verbose --project ToDoApp.DataBase   --startup-project ToDoApp.WebApp
     
 - task: AzureWebApp@1
   inputs:
