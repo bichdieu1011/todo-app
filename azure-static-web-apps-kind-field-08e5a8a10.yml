@@ -21,20 +21,6 @@ jobs:
   
   - checkout: self
     submodules: true
-  - task: Bash@3
-    displayName: run script to install node and run build
-    env:
-        baseUrl: $(baseUrl)
-    inputs:
-      targetType: inline
-      script: |
-        ls
-        cd ToDoApp.WebApp
-        cd Client
-        npm install
-        npm run build --configuration=production --baseUrl=$(baseUrl)
-
-
   - task: AzureStaticWebApp@0
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
@@ -45,10 +31,9 @@ jobs:
       output_location: "dist/todoapp.client" # Built app content directory - optional
       app_artifact_location: "" # Built app content directory - optional
       skip_api_build: true
+      app_build_command: |
+        npm install
+        npm run build --configuration=production --baseUrl=$(baseUrl)
     env:
       baseUrl: $(baseUrl)
 ###### End of Repository/Build Configurations ######
-
-
-  
-
