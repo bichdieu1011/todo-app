@@ -31,5 +31,10 @@ jobs:
       output_location: "dist/todoapp.client" # Built app content directory - optional
       app_artifact_location: "" # Built app content directory - optional
       skip_api_build: true
+    env:
+      baseUrl: $(baseUrl)
 ###### End of Repository/Build Configurations ######
+
+
+  
 
