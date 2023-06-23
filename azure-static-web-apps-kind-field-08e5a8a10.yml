@@ -21,20 +21,6 @@ jobs:
   
   - checkout: self
     submodules: true
-  - task: replacetokens@5
-    inputs:
-      targetFiles: '**/dist/todoapp.client/**/main**.js'
-      encoding: 'auto'
-      tokenPattern: 'default'
-      writeBOM: true
-      verbosity: 'detailed'
-      actionOnMissing: 'warn'
-      keepToken: false
-      actionOnNoFiles: 'continue'
-      enableTransforms: false
-      enableRecursion: false
-      useLegacyPattern: false
-      enableTelemetry: true
   - task: AzureStaticWebApp@0
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
@@ -45,6 +31,10 @@ jobs:
       output_location: "dist/todoapp.client" # Built app content directory - optional
       app_artifact_location: "" # Built app content directory - optional
       skip_api_build: true
+    env:
+      baseUrl: $(baseUrl)
 ###### End of Repository/Build Configurations ######
+
+
   
 
