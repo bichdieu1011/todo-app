@@ -78,13 +78,13 @@ stages:
             inputs:
               cleanDestinationFolder: true
               archiveFilePatterns: '$(System.ArtifactsDirectory)/**/$(Build.BuildId).zip'
-              destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web/todoapp.client'
+              destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web'
 
           - task: AzureStaticWebApp@0
             inputs:
               azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
               skip_app_build: true
               workingDirectory: '$(Build.ArtifactStagingDirectory)'
-              app_location: '/extract-web'
+              app_location: '/extract-web/todoapp.client'
               
               
