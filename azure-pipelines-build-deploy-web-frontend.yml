@@ -35,12 +35,6 @@ jobs:
      command: 'install'
      workingDir: 'TodoApp.WebApp/Client'
   
-  - task: AngularCLI@1
-    inputs:
-      command: 'build'
-      project: 'ToDoApp.WebApp/Client'
-    
-
   - task: Npm@0
     name: buildAngularWebPackage
     inputs:  
