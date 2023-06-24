@@ -1,6 +1,6 @@
 
 resource "azurerm_key_vault" "demoapp_key_vault" {
-  name                        = "kv-us-demoapp-secret"
+  name                        = "kv-us-demoappforitvb-sc"
   resource_group_name         = var.resource_group
   location                    = var.deploy_location
   sku_name                    = "standard"
@@ -28,7 +28,9 @@ resource "azurerm_key_vault_access_policy" "demoapp_key_vault_access_policy" {
 
   secret_permissions = [
     "Get",
-    "List"
+    "List",
+    "Set",
+    "Purge"
   ]
 
 }

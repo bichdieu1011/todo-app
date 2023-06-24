@@ -9,12 +9,12 @@ terraform {
 
   required_version = ">= 1.1.0"
 
-  backend "azurerm" {
-    # resource_group_name = "rg-us-demo-apps"
-    # storage_account_name = "terraformstate"
-    # container_name = "tfcontainer"
-    # key = "terraform.tfstate"
-  }
+  # backend "azurerm" {
+  #   # resource_group_name = "rg-us-demo-apps"
+  #   # storage_account_name = "terraformstate"
+  #   # container_name = "tfcontainer"
+  #   # key = "terraform.tfstate"
+  # }
 }
 
 provider "azurerm" {
@@ -69,7 +69,7 @@ module "app_key_vault_secret"{
 module "webapplication" {
   source          = "./modules/web-application"
   resource_group  = var.resource_group
-  deploy_location = var.deploy_location
+  deploy_location = "eastus"
   environment     = var.environment
   department      = var.department
   app_source      = var.app_source
