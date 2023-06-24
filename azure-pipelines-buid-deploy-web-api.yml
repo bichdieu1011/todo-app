@@ -39,6 +39,8 @@ steps:
 
 
 - task : PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/dll-$(Build.BuildId).zip'
 
 - task: ArchiveFiles@2
   inputs:
