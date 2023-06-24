@@ -13,6 +13,7 @@ trigger:
       - Terraform
       - Script
       - azure-pipelines-build-deploy-web-frontend.yml
+      - azure-pipelines-for-terraform.yml
 
 pool:
   vmImage: 'windows-latest'
