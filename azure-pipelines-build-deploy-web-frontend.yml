@@ -42,5 +42,16 @@ jobs:
       command: custom
       customCommand: run build --configuration=production
       workingDir: 'TodoApp.WebApp/Client'
-      
-  - task: PublishBuildArtifacts@1
+  
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: 'TodoApp.WebApp/Client/dist/todoapp.client'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+  
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      publishLocation: 'pipeline'
