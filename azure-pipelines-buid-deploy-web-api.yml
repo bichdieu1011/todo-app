@@ -38,9 +38,11 @@ steps:
     configuration: '$(buildConfiguration)'
 
 
-- task : PublishBuildArtifacts@1
+- task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/dll-$(Build.BuildId).zip'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'WebAppBuilt'
+    publishLocation: 'Container'
 
 - task: ArchiveFiles@2
   inputs:
