@@ -1,45 +1,43 @@
 
-locals {
-  tags = {
-    environment = var.environment
-    department = var.department
-    source = var.app_source
-  }
-  app_settings = {
-    APPLICATIONINSIGHTS_CONNECTION_STRING = var.application_insight_connection_string
-     
-    WEBSITE_NODE_DEFAULT_VERSION = "12.16.1"
-    AAD_ENABLED                  = "true"
-    AAD_CLIENT_ID                = var.client_id
-    AAD_ISSUER_URL               = "https://login.microsoftonline.com/common/v2.0"
-    AAD_METADATA_URL             = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration"
-    AAD_REDIRECT_URI             = "https://terraform-web-service.azurewebsites.net/.auth/login/aad/callback"
-    AAD_SCOPES                   = "openid profile email"
-    # WEBSITE_AUTH_DEFAULT_PROVIDER= "AzureActiveDirectory"
-  
-  }
-  
+resource "azurerm_static_site" "demoapp_client" {
+  name                = "ss-us-demo-site"
+  resource_group_name = var.resource_group
+  location            = var.deploy_location
 }
 
-
-resource "azurerm_service_plan" "teraformwebservice" {
-  name                = "teraformwebserviceplan"
+resource "azurerm_service_plan" "demoapp_api_service_plan" {
+  name                = "sp-us-demo-servcice-plan"
   resource_group_name = var.resource_group
   location            = var.deploy_location
   os_type             = "Linux"
   sku_name            = "P1v2"
 }
 
+locals {
+  tags = {
+    environment = var.environment
+    department  = var.department
+    source      = var.app_source
+  }
 
-resource "azurerm_windows_web_app" "teraformwebservice" {
-  name                = "terraform-web-service"
+  app_settings = {
+    "Secret--KeyVaultName" = var.KeyVaultName
+    "Secret--TenantId"     = var.tenant_id
+    "Secret--ClientId"     = var.client_id
+    "Secret--ClientSecret" = var.client_secret
+    AllowAngularOrigins = azurerm_static_site.demoapp_client.default_host_name
+  }
+}
+
+resource "azurerm_windows_web_app" "demoapp_api" {
+  name                = "wa-us-demo-web-api"
   location            = var.deploy_location
   resource_group_name = var.resource_group
-  service_plan_id     = azurerm_service_plan.teraformwebservice.id
+  service_plan_id     = azurerm_service_plan.demoapp_api_service_plan.id
   tags                = local.tags
   https_only          = false
   site_config {
   }
 
-  app_settings =    local.app_settings
+  app_settings = local.app_settings
 }

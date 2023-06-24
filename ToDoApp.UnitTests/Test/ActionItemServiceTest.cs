@@ -32,6 +32,14 @@ namespace ToDoApp.UnitTests.Test
         }
 
         [Fact]
+        public async Task GetAllByWidget_ToDay()
+        {
+            var result1 = await actionItemService.GetAllByWidget(1, TaskWidgetType.Today, 0, 5, "content", "asc");
+            Assert.NotNull(result1);
+            Assert.Equal(2, result1.Total);
+        }
+
+        [Fact]
         public async Task GetAll()
         {
             var result1 = await actionItemService.GetAll(1);
@@ -53,11 +61,11 @@ namespace ToDoApp.UnitTests.Test
                 Status = (short)ActionItemStatus.Open
             };
             var result = await actionItemService.Add(record);
-            Assert.Equal(TodoApp.Services.Constant.Result.Success, result.Result);
+            Assert.Equal(Result.Success, result.Result);
         }
 
         [Fact]
-        public async Task Add_ActionItem_To_NotExists_Category()
+        public void Add_ActionItem_To_NotExists_Category()
         {
             var record = new ActionItemModel
             {
@@ -70,7 +78,7 @@ namespace ToDoApp.UnitTests.Test
         }
 
         [Fact]
-        public async Task Add_ActionItem_To_InActive_Category()
+        public void Add_ActionItem_To_InActive_Category()
         {
             var record = new ActionItemModel
             {
@@ -80,7 +88,74 @@ namespace ToDoApp.UnitTests.Test
                 End = DateTime.Now
             };
             Assert.Throws<AggregateException>(() => actionItemService.Add(record).Result);
+        }
 
+        [Fact]
+        public async Task Edit_ActionItem_Valid_Status()
+        {
+            var record = new UpdateActionItemStatus
+            {
+                Id = 1,
+                CurrentStatus = ActionItemStatus.Open,
+                NewStatus = ActionItemStatus.Done
+            };
+
+            var res = await actionItemService.Edit(record);
+            Assert.Equal(Result.Success, res.Result);
+        }
+
+        [Fact]
+        public void Edit_No_Exists_ActionItem()
+        {
+            var record = new UpdateActionItemStatus
+            {
+                Id = 0,
+                CurrentStatus = ActionItemStatus.Open,
+                NewStatus = ActionItemStatus.Done
+            };
+            Assert.Throws<AggregateException>(() => actionItemService.Edit(record).Result);
+        }
+
+        [Fact]
+        public async Task Edit_ActionItem_Obsolete_Status()
+        {
+            var record = new UpdateActionItemStatus
+            {
+                Id = 1,
+                CurrentStatus = ActionItemStatus.Done,
+                NewStatus = ActionItemStatus.Open
+            };
+
+            var res = await actionItemService.Edit(record);
+            Assert.Equal(Result.Warning, res.Result);
+        }
+
+        [Fact]
+        public async Task Edit_ActionItem_Invalid_Status()
+        {
+            var record = new UpdateActionItemStatus
+            {
+                Id = 1,
+                CurrentStatus = ActionItemStatus.Open,
+                NewStatus = ActionItemStatus.Removed
+            };
+
+            var res = await actionItemService.Edit(record);
+            Assert.Equal(Result.Error, res.Result);
+        }
+
+        [Fact]
+        public async Task Delete_ActionItem()
+        {
+            var res = await actionItemService.Delete(1);
+            Assert.Equal(Result.Success, res.Result);
+        }
+
+        [Fact]
+        public async Task Delete_No_Exists_ActionItem()
+        {
+            var res = await actionItemService.Delete(0);
+            Assert.Equal(Result.Error, res.Result);
         }
 
         private void InitData()

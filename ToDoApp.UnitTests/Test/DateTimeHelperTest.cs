@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TodoApp.Services;
+﻿using TodoApp.Services;
 
 namespace ToDoApp.UnitTests.Test
 {
     public class DateTimeHelperTest
     {
-        public DateTimeHelperTest() { }
+        public DateTimeHelperTest()
+        { }
 
         [Fact]
         public void TestToday()
@@ -24,7 +20,6 @@ namespace ToDoApp.UnitTests.Test
 
             Assert.Equal(today.Year, res.Start.Year);
             Assert.Equal(today.Year, res.End.Year);
-
 
             Assert.Equal(0, res.Start.Hour);
             Assert.Equal(0, res.Start.Minute);
@@ -48,7 +43,6 @@ namespace ToDoApp.UnitTests.Test
             Assert.Equal(today.Year, res.Start.Year);
             Assert.Equal(today.Year, res.End.Year);
 
-
             Assert.Equal(0, res.Start.Hour);
             Assert.Equal(0, res.Start.Minute);
             Assert.Equal(0, res.Start.Second);
@@ -70,7 +64,6 @@ namespace ToDoApp.UnitTests.Test
 
             Assert.Equal(today.Year, res.Start.Year);
             Assert.Equal(today.Year, res.End.Year);
-
 
             Assert.Equal(0, res.Start.Hour);
             Assert.Equal(0, res.Start.Minute);

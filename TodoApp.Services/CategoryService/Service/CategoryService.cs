@@ -64,11 +64,13 @@ namespace TodoApp.Services.CategoryService.Service
             }
 
             category.IsActive = false;
+            category.Updated = DateTime.Now;
 
             var items = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == id && s.Status == (short)ActionItemStatus.Open).ToListAsync();
             foreach (var item in items)
             {
                 item.Status = (short)ActionItemStatus.Removed;
+                item.Updated = DateTime.Now;
             }
 
             await dbContext.SaveChangesAsync();

@@ -73,12 +73,13 @@ namespace TodoApp.Services.ActionItemService
             {
                 return new ActionResult
                 {
-                    Result = Constant.Result.Success,
+                    Result = Constant.Result.Error,
                     Messages = new List<string>() { "Record is not exists" }
                 };
             }
 
             record.Status = (short)ActionItemStatus.Removed;
+            record.Updated = DateTime.Now;
             await dbContext.SaveChangesAsync();
             return new ActionResult
             {
@@ -88,19 +89,25 @@ namespace TodoApp.Services.ActionItemService
 
         public async Task<ActionResult> Edit(UpdateActionItemStatus record)
         {
-            if (record is null)
-                throw new Exception("record is empty");
+            if (record is null) throw new Exception("record is empty");
 
             var item = await dbContext.Set<ActionItem>().SingleOrDefaultAsync(s => s.Id == record.Id);
-            if (record is null)
+            if (item is null)
             {
                 throw new Exception($"{nameof(ActionItem)} is not found");
             }
+
+            if (!(record.NewStatus == ActionItemStatus.Open || record.NewStatus == ActionItemStatus.Done))
+                return new ActionResult { Result = Constant.Result.Error, Messages = new List<string> { "Data status is invalid" } };
+
+            if (record.CurrentStatus == record.NewStatus)
+                return new ActionResult { Result = Constant.Result.Warning, Messages = new List<string> { "Data status is invalid" } };
 
             if (item.Status != (short)record.CurrentStatus)
                 return new ActionResult { Result = Constant.Result.Warning, Messages = new List<string> { "Status is obsoleted" } };
 
             item.Status = (short)record.NewStatus;
+            item.Updated = DateTime.Now;
             await dbContext.SaveChangesAsync();
             return new ActionResult { Result = Constant.Result.Success };
         }

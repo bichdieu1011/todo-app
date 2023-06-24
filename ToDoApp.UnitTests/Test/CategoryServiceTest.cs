@@ -61,6 +61,46 @@ namespace ToDoApp.UnitTests.Test
             Assert.Equal(TodoApp.Services.Constant.Result.Success, result.Result);
         }
 
+        [Fact]
+        public async Task Get_All_Category()
+        {
+            var result = await categoryService.GetAll();
+            Assert.Single(result);
+            Assert.Contains(result, item => item.Id == 1);
+            Assert.DoesNotContain(result, item => item.Id == 2);
+        }
+
+        [Fact]
+        public async Task Deactivate_An_Active_Category()
+        {
+            testDbContextMock.Set<Category>().AddRange(new Category[]
+            {
+                new Category {
+                    Id = 3,
+                    Name = "category 3",
+                    IsActive = true,
+                    ActionItems = new List<ActionItem>{
+                            new ActionItem
+                            {
+                                Id = 1,
+                                CategoryId = 3,
+                                Content = "item 1",
+                                Status = 0
+                            }
+                    }
+                }
+            });
+            testDbContextMock.SaveChanges();
+
+            var result = await categoryService.Deactivate(3);
+            Assert.Equal(TodoApp.Services.Constant.Result.Success, result.Result);
+            
+            var category = testDbContextMock.Set<Category>().Include(x => x.ActionItems).SingleOrDefault(s => s.Id ==3);
+            Assert.NotNull(category);
+            Assert.False(category.IsActive);
+            Assert.DoesNotContain(category.ActionItems, s =>  s.Status != (short)TodoApp.Services.Constant.ActionItemStatus.Removed );
+        }
+
         private void InitData()
         {
             testDbContextMock.Set<Category>().AddRange(new Category[]

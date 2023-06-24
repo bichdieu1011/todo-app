@@ -6,3 +6,5 @@ TestResults/
 PublishProfiles/
 Properties/
 coverage.opencover.xml
+.terraform/
+.terraform.lock.hcl

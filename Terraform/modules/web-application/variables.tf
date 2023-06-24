@@ -28,14 +28,27 @@ variable "app_source" {
   default     = ""
 }
 
-variable "application_insight_connection_string" {
-  description = "connection_string of the application insights"
-  type        = string
-  default     = ""
-}
-
 variable "client_id" {
   description = "client id of application register"
   type        = string
   default     = ""
+}
+
+
+variable "client_secret" {
+  description = "value of application secret"
+  type = string
+  default = ""
+}
+
+variable "tenant_id" {
+  description = "value of directory"
+  type = string
+  default = ""
+}
+
+variable "KeyVaultName" {
+  description = "name of key-vault service"
+  type = string
+  default = ""
 }

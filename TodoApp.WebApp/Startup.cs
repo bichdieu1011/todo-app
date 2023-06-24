@@ -17,14 +17,11 @@ namespace TodoApp.WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.ConfigureDatabase(Configuration);
-
-            services
-                .AddDbContext<ToDoAppContext>((s, o) =>
+            services.AddDbContext<ToDoAppContext>((s, o) =>
             {
-                var logger = s.GetRequiredService<ILogger<Startup>>();
+                //var logger = s.GetRequiredService<ILogger<Startup>>();
                 var connectionString = Configuration["ConnectionString:SQL"];
-                logger.LogInformation("connections tring: " + connectionString);
+                //logger.LogInformation("connections tring: " + connectionString);
                 o.UseSqlServer(connectionString);
             })
             .AddDbContextFactory<ToDoAppContext>(optionsBuilder =>

@@ -28,34 +28,8 @@ variable "app_source" {
   default     = ""
 }
 
-variable "tenant_id" {
-  type = string
-  default = ""
-}
 
-
-variable "storage_account_tier" {
-  description = "Account Tier of the storage account, it could be Standard, Premium"
-  type        = string
-  default     = ""
-}
-
-
-variable "storage_account_replication_type" {
-  description = "Storage account relication type, it could be LRS, ZRS, GRS or RA-GRS"
-  type        = string
-  default     = ""
-}
-
-
-variable "sql_server_admin" {
-  description = "username of DB admin"
-  type = string
-  default = ""
-}
-
-variable "sql_server_admin_password" {
-  description = "password of DB admin"
+variable "application_object_id" {
   type = string
   default = ""
 }

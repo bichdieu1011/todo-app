@@ -1,10 +1,13 @@
-resource "azuread_application" "terraformtest" {
-  display_name = "terraform-web-v5"
-  sign_in_audience = "AzureADandPersonalMicrosoftAccount"
+resource "azuread_application" "demo_application_registry" {
+  display_name = "ar-interview-us-demoapp-1"
   
-  api{
-    requested_access_token_version = 2 
-  }
+}
 
+resource "azuread_service_principal" "demo_app_service_principal" {
+  application_id = azuread_application.demo_application_registry.application_id
+}
+
+resource "azuread_application_password" "demo_app_secret" {
+  application_object_id = azuread_application.demo_application_registry.object_id  
   
 }

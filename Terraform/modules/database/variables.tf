@@ -28,15 +28,20 @@ variable "app_source" {
   default     = ""
 }
 
-variable "storage_account_tier" {
-  description = "Account Tier of the storage account, it could be Standard, Premium"
-  type        = string
-  default     = ""
+
+variable "admin_username" {
+  description = "configuration to store username of sql admin"
+  type = string
+  default = ""
 }
 
+variable "admin_password" {
+  description = "configuration to store password of sql admin"
+  type = string
+  default = ""
+}
 
-variable "storage_account_replication_type" {
-  description = "Storage account relication type, it could be LRS, ZRS, GRS or RA-GRS"
-  type        = string
-  default     = ""
+variable "application_object_id" {
+  type = string
+  default = ""
 }
