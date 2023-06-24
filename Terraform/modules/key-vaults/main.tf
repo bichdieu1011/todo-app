@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {
+}
 
 resource "azurerm_key_vault" "demoapp_key_vault" {
   name                        = "kv-us-demoappforitvb-sc"
@@ -15,7 +17,6 @@ resource "azurerm_key_vault" "demoapp_key_vault" {
   }
 }
 
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault_access_policy" "demoapp_key_vault_access_policy" {
   # name = "Key Management"
@@ -40,7 +41,7 @@ resource "azurerm_key_vault_access_policy" "demoapp_key_vault_access_policy_for_
   
   key_vault_id = azurerm_key_vault.demoapp_key_vault.id
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.azure_devops_project_id
+  object_id = data.azurerm_client_config.current.object_id
 
   secret_permissions = [
     "Get",
@@ -53,5 +54,5 @@ resource "azurerm_key_vault_access_policy" "demoapp_key_vault_access_policy_for_
 resource "azurerm_role_assignment" "demoapp_key_vault_role_assign_to_azure_devops" {
   role_definition_name = "Contributor" 
   scope = azurerm_key_vault.demoapp_key_vault.id
-  principal_id = var.azure_devops_project_id
+  principal_id = data.azurerm_client_config.current.object_id
 }
