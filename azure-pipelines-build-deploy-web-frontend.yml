@@ -14,9 +14,9 @@ trigger:
       - azure-pipelines-build-deploy-web-frontend.yml
 
 stages:
-  - stage: deploy
+  - stage: Buid
     jobs:
-    - job: build_and_deploy_job
+    - job: build_and_publish_job
       displayName: Build and Deploy Job
       condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
       pool:
@@ -57,3 +57,33 @@ stages:
         inputs:
           targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           publishLocation: 'pipeline'
+
+  - stage: deploy
+    dependsOn: Buid
+    condition: succeeded()
+    jobs:
+      - job: deploy_job
+        displayName: Deploy Job
+        pool:
+          vmImage: ubuntu-latest
+        variables:
+        - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
+        steps:
+          - task: DownloadPipelineArtifact@1
+            inputs:
+              buildType: current
+              targetPath: '$(System.ArtifactsDirectory)'
+          - task: ExtractFiles@1
+            inputs:
+              cleanDestinationFolder: true
+              archiveFilePatterns: '**/$(Build.BuildId).zip'
+              destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web'
+
+          - task: AzureStaticWebApp@0
+            inputs:
+              azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_KIND_FIELD_08E5A8A10)
+              skip_app_build: true
+              workingDirectory: '$(Build.ArtifactStagingDirectory)'
+              app_location: '/extract-web'
+              
+              
