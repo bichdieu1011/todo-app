@@ -47,7 +47,7 @@ stages:
             command: 'validate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
 
-  - stage: Push to Artifact
+  - stage: Push_To_Artifact
     jobs:
         - job: archive_and_publish_to_artifact
           displayName: Archive And Publish To Artifact
