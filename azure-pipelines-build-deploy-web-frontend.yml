@@ -35,11 +35,7 @@ jobs:
      command: 'install'
      workingDir: 'TodoApp.WebApp/Client'
   
-  - task: Bash@3
-    inputs:
-      script: ng build
-      
-      
+  - script: ng build
 
   - task: Npm@0
     name: buildAngularWebPackage
