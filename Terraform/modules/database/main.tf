@@ -20,7 +20,7 @@ resource "azurerm_mssql_database" "demoapp_sql_database" {
   collation = "SQL_Latin1_General_CP1_CI_AS"
 
   max_size_gb    = 5
-  sku_name       = "Basic"
+  sku_name       = "S2"
   zone_redundant = false
 
   tags = {
