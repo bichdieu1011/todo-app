@@ -60,7 +60,7 @@ stages:
 
   - stage: deploy
     dependsOn: Buid
-    condition: and(succeeded(), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest')))
+    condition: and(succeeded(), or(eq(variables['Build.Reason'], 'Manual')))
     
     jobs:
       - job: deploy_job
