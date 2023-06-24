@@ -42,7 +42,7 @@ steps:
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/WebApp'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/source-$(Build.BuildId).zip'
