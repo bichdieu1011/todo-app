@@ -40,7 +40,7 @@ jobs:
     name: buildAngularWebPackage
     inputs:  
       cwd: 'TodoApp.WebApp/Client'
-      command: run buid
-      arguments: --configuration=production
+      command: run 
+      arguments: buid --configuration=production
       
   - task: PublishBuildArtifacts@1
