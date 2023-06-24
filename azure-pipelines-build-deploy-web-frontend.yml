@@ -28,14 +28,17 @@ jobs:
   - task: NodeAndNpmTool@1
     inputs:
      versionSpec: 18.16.0
-  - task: AngularCLI@1
-    name: Run_Angular_CLI_Buid
-    inputs:
-      command: 'build'
+
   - task: Npm@0
     name: Run_Npm_Install
     inputs:
       command: install
+      
+  - task: AngularCLI@1
+    name: Run_Angular_CLI_Buid
+    inputs:
+      command: 'build'
+
     
   - task: Npm@0
     name: buildAngularWebPackage
