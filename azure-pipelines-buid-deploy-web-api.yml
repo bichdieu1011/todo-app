@@ -37,5 +37,31 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+
 - task : PublishBuildArtifacts@1
+
+- task: DotNetCoreCLI@2
+  displayName: new tool manifest
+  inputs:
+    command: 'custom'
+    custom: 'new'
+    arguments: 'tool-manifest'
+- task: DotNetCoreCLI@2
+  displayName: Install dotnet ef
+  inputs:
+    command: 'custom'
+    custom: 'tool'
+    arguments: 'install dotnet-ef'
+- task: DotNetCoreCLI@2
+  displayName: Create SQL Scripts
+  inputs:
+    command: 'custom'
+    custom: 'ef '
+    arguments: migrations script --output $(Build.SourcesDirectory)/SQL/migrate-db-$(Build.BuildId).sql --idempotent --project $(Build.SourcesDirectory)/TodoApp.WebApp/TodoApp.WebApp.csproj --context ToDoAppContext
+
+- task: PublishBuildArtifacts@1
+  displayName: copy script to artifact
+  inputs:
+    PathtoPublish: $(Build.SourcesDirectory)/SQL/migrate-db-$(Build.BuildId).sql
+    ArtifactName: MigrationScript
 
