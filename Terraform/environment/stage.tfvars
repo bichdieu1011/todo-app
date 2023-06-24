@@ -1,5 +1,5 @@
 resource_group = "rg-demoapp"
-deploy_location = "centralus"
+deploy_location = "eastus"
 environment = "demo"
 department = "none"
 app_source = "terraform"
