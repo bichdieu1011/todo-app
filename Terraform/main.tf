@@ -9,12 +9,12 @@ terraform {
 
   required_version = ">= 1.1.0"
 
-  # backend "azurerm" {
-  #   resource_group_name = "rg-us-demo-apps"
-  #   storage_account_name = "terraformstate"
-  #   container_name = "tfcontainer"
-  #   key = "terraform.tfstate"
-  # }
+  backend "azurerm" {
+    # resource_group_name = "rg-us-demo-apps"
+    # storage_account_name = "terraformstate"
+    # container_name = "tfcontainer"
+    # key = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
