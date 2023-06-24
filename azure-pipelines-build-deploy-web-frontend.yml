@@ -34,12 +34,6 @@ jobs:
     inputs:
      command: 'install'
      workingDir: 'TodoApp.WebApp/Client'
-
-  - task: AngularCLI@1
-    inputs:
-      command: 'custom'
-      project: 'ToDoApp.WebApp/Client'
-      custom: 'npm install --save-dev @angular/cli@16.1.0'
   
   - task: AngularCLI@1
     inputs:
