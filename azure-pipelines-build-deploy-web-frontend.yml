@@ -38,7 +38,7 @@ jobs:
   - task: Bash@3
     inputs:
       script: ng build
-      workingDirectory: '*/TodoApp.WebApp/Client'
+      workingDirectory: '**/TodoApp.WebApp/Client'
       
 
   - task: Npm@0
