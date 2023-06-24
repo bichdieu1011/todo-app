@@ -28,8 +28,9 @@ variable "app_source" {
   default     = ""
 }
 
-
 variable "application_object_id" {
+  description = " object ID of service principal"
   type = string
   default = ""
+  
 }

@@ -47,8 +47,14 @@ module "app_register"{
 }
 
 module "app_key_vault"{
-  source = "./modules/key-vaults"  
-  depends_on      = [module.resource-group]
+  source = "./modules/key-vaults"
+  resource_group  = var.resource_group
+  deploy_location = var.deploy_location
+  environment     = var.environment
+  department      = var.department
+  app_source      = var.app_source
+  application_object_id = module.app_register.application_object_id
+  depends_on      = [module.resource-group, module.app_register]
 }
 
 module "app_key_vault_secret"{
