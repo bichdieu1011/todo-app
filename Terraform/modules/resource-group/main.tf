@@ -7,3 +7,9 @@ resource "azurerm_resource_group" "demoapp_resource_group" {
     source = var.app_source
   }
 }
+
+resource "azurerm_role_assignment" "demoapp_api_rg_role_assign_to_azure_devops" {
+  role_definition_name = "Contributor"
+  scope = azurerm_resource_group.demoapp_resource_group.id
+  principal_id = var.azure_devops_project_id
+}

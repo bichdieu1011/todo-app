@@ -1,8 +1,15 @@
+data "azurerm_subscription" "primary" {}
 
 resource "azurerm_static_site" "demoapp_client" {
   name                = "ss-us-demo-site"
   resource_group_name = var.resource_group
   location            = "eastus2"
+}
+
+resource "azurerm_role_assignment" "demoapp_api_st_role_assign_to_azure_devops" {
+  role_definition_name = "Contributor"
+  scope = azurerm_static_site.demoapp_client.id
+  principal_id = var.azure_devops_project_id
 }
 
 resource "azurerm_service_plan" "demoapp_api_service_plan" {
@@ -42,4 +49,10 @@ resource "azurerm_windows_web_app" "demoapp_api" {
   }
 
   app_settings = local.app_settings
+}
+
+resource "azurerm_role_assignment" "demoapp_api_api_role_assign_to_azure_devops" {
+  role_definition_name = "Contributor"
+  scope = azurerm_windows_web_app.demoapp_api.id
+  principal_id = var.azure_devops_project_id
 }

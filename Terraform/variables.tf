@@ -59,3 +59,9 @@ variable "sql_server_admin_password" {
   type = string
   default = ""
 }
+
+variable "azure_devops_project_id" {
+  description = "id of azure devops project"
+  type = string
+  default = ""
+}

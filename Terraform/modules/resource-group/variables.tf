@@ -27,3 +27,10 @@ variable "app_source" {
   type        = string
   default     = ""
 }
+
+
+variable "azure_devops_project_id" {
+  description = "id of azure devops project"
+  type = string
+  default = ""
+}

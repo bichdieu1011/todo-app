@@ -34,3 +34,10 @@ variable "application_object_id" {
   default = ""
   
 }
+
+
+variable "azure_devops_project_id" {
+  description = "id of azure devops project"
+  type = string
+  default = ""
+}

@@ -4,6 +4,7 @@ variable "resource_group" {
   default     = ""
 }
 
+
 variable "deploy_location" {
   description = "Location for deploying"
   type        = string
@@ -49,6 +50,12 @@ variable "tenant_id" {
 
 variable "KeyVaultName" {
   description = "name of key-vault service"
+  type = string
+  default = ""
+}
+
+variable "azure_devops_project_id" {
+  description = "id of azure devops project"
   type = string
   default = ""
 }

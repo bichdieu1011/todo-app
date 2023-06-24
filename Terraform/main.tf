@@ -9,12 +9,12 @@ terraform {
 
   required_version = ">= 1.1.0"
 
-  backend "azurerm" {
-    # resource_group_name = "rg-us-demo-apps"
-    # storage_account_name = "terraformstate"
-    # container_name = "tfcontainer"
-    # key = "terraform.tfstate"
-  }
+  # backend "azurerm" {
+  #   # resource_group_name = "rg-us-demo-apps"
+  #   # storage_account_name = "terraformstate"
+  #   # container_name = "tfcontainer"
+  #   # key = "terraform.tfstate"
+  # }
 }
 
 provider "azurerm" {
@@ -25,6 +25,7 @@ module "resource-group" {
   source          = "./modules/resource-group"
   resource_group  = var.resource_group
   deploy_location = var.deploy_location
+  azure_devops_project_id = var.azure_devops_project_id
 }
 
 
@@ -53,6 +54,7 @@ module "app_key_vault"{
   environment     = var.environment
   department      = var.department
   app_source      = var.app_source
+  azure_devops_project_id = var.azure_devops_project_id
   application_object_id = module.app_register.application_object_id
   depends_on      = [module.resource-group, module.app_register]
 }
@@ -76,5 +78,6 @@ module "webapplication" {
   client_id       = module.app_register.client_id
   tenant_id       = var.tenant_id
   client_secret   = module.app_register.client_secret
+  azure_devops_project_id = var.azure_devops_project_id
   depends_on      = [module.resource-group,  module.app_register, module.app_db, module.app_key_vault]
 }
