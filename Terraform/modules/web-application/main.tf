@@ -52,7 +52,7 @@ resource "azurerm_windows_web_app" "demoapp_api" {
 }
 
 resource "azurerm_role_assignment" "demoapp_api_api_role_assign_to_azure_devops" {
-  role_definition_name = "Contributor"
+  role_definition_name = "Contributor" 
   scope = azurerm_windows_web_app.demoapp_api.id
   principal_id = var.azure_devops_project_id
 }
