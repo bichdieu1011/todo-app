@@ -35,14 +35,12 @@ jobs:
      command: 'install'
      workingDir: 'TodoApp.WebApp/Client'
   
-  - script: ng build
 
   - task: Npm@0
     name: buildAngularWebPackage
     inputs:  
+      cwd: 'TodoApp.WebApp/Client'
       command: run buid
-      arguments: --configuration=production --baseUrl=$(TD_BASE_URL)
-    env:
-      baseUrl: $(TD_BASE_URL)
+      arguments: --configuration=production
       
   - task: PublishBuildArtifacts@1
