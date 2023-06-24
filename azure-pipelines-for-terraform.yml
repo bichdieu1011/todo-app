@@ -1,0 +1,67 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - Terraform
+      - azure-pipelines-for-terraform.yml
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: terraform-variable
+
+stages:
+  - stage: Buid
+    jobs:
+      - job: Install_and_validate_terraform
+        displayName: Install and validate terraform
+        condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
+        steps:
+        - checkout: self
+          submodules: true
+        - task: TerraformInstaller@0
+
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
+            backendAzureRmResourceGroupName: 'demoapp-terraform'
+            backendAzureRmStorageAccountName: 'demoappterraform'
+            backendAzureRmContainerName: 'tfcontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+
+  - stage: Push to Artifact
+    jobs:
+        - job: archive_and_publish_to_artifact
+          displayName: Archive And Publish To Artifact
+          dependsOn: Buid
+          condition: succeeded()
+          steps:
+            - task: ArchiveFiles@2
+              inputs:
+                rootFolderOrFile: '$(System.DefaultWorkingDirectory)/Terraform'
+                includeRootFolder: true
+                archiveType: 'zip'
+                archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+                replaceExistingArchive: true
+            - task: PublishPipelineArtifact@1
+              inputs:
+                targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+                publishLocation: 'pipeline'
