@@ -40,7 +40,7 @@ jobs:
     name: buildAngularWebPackage
     inputs:
       command: custom
-      customCommand: npm run build --configuration=production
+      customCommand: run build --configuration=production
       workingDir: 'TodoApp.WebApp/Client'
       
   - task: PublishBuildArtifacts@1
