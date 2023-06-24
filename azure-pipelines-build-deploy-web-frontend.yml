@@ -36,9 +36,16 @@ jobs:
      workingDir: 'TodoApp.WebApp/Client'
 
   - task: AngularCLI@1
-    name: Run_Angular_CLI_Buid
+    inputs:
+      command: 'custom'
+      project: 'ToDoApp.WebApp/Client'
+      custom: 'npm install --save-dev @angular/cli@16.1.0'
+  
+  - task: AngularCLI@1
     inputs:
       command: 'build'
+      project: 'ToDoApp.WebApp/Client'
+    
 
   - task: Npm@0
     name: buildAngularWebPackage
