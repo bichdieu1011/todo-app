@@ -27,24 +27,24 @@ jobs:
     submodules: true
   - task: NodeAndNpmTool@1
     inputs:
-     versionSpec: 18.16.0
+     versionSpec: 18.x
 
-  - task: Npm@0
+  - task: Npm@1
     name: Run_Npm_Install
     inputs:
-      command: install
-      
+     command: 'install'
+     workingDir: 'TodoApp.WebApp/Client'
+
   - task: AngularCLI@1
     name: Run_Angular_CLI_Buid
     inputs:
       command: 'build'
 
-    
   - task: Npm@0
     name: buildAngularWebPackage
     inputs:  
       command: run buid --configuration=production --baseUrl=$(TD_BASE_URL)      
     env:
       baseUrl: $(TD_BASE_URL)
-  
+      
   - task: PublishBuildArtifacts@1
