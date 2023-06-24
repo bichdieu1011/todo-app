@@ -60,7 +60,7 @@ stages:
 
   - stage: deploy
     dependsOn: Buid
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+    condition: and(succeeded(), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest')))
     
     jobs:
       - job: deploy_job
@@ -78,7 +78,7 @@ stages:
             inputs:
               cleanDestinationFolder: true
               archiveFilePatterns: '$(System.ArtifactsDirectory)/**/$(Build.BuildId).zip'
-              destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web'
+              destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web/todoapp.client'
 
           - task: AzureStaticWebApp@0
             inputs:
