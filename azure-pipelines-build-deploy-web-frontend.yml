@@ -60,7 +60,8 @@ stages:
 
   - stage: deploy
     dependsOn: Buid
-    condition: succeeded()
+    condition: succeeded(), and(eq(variables['Build.Reason'], 'Manual'))
+    
     jobs:
       - job: deploy_job
         displayName: Deploy Job
@@ -76,7 +77,7 @@ stages:
           - task: ExtractFiles@1
             inputs:
               cleanDestinationFolder: true
-              archiveFilePatterns: '**/$(Build.BuildId).zip'
+              archiveFilePatterns: '$(System.ArtifactsDirectory)/**/$(Build.BuildId).zip'
               destinationFolder: '$(Build.ArtifactStagingDirectory)/extract-web'
 
           - task: AzureStaticWebApp@0
