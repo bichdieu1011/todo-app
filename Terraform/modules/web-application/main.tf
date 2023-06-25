@@ -27,7 +27,7 @@ resource "azuread_application" "demo_application_registry_for_client" {
   }
 
   single_page_application {
-    redirect_uris = ["http://locahost:4200", "https://${azurerm_static_site.demoapp_client.default_host_name}/"]
+    redirect_uris = ["http://locahost:4200/", "https://${azurerm_static_site.demoapp_client.default_host_name}/"]
   }
 
   web {
