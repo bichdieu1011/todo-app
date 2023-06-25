@@ -46,21 +46,16 @@ stages:
           customCommand: run build --configuration=production
           workingDir: 'TodoApp.WebApp/Client'
 
-    - job: publish_job
-      displayName: Publish Job
-      dependsOn: build_job
-      condition: succeeded()
-      steps:
-        - task: ArchiveFiles@2
-          inputs:
-            rootFolderOrFile: 'TodoApp.WebApp/Client/dist/todoapp.client'
-            includeRootFolder: true
-            archiveType: 'zip'
-            archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-            replaceExistingArchive: true
-        
-        - task: PublishPipelineArtifact@1
-          displayName: publish package to pipeline artifact
-          inputs:
-            targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-            publishLocation: 'pipeline'
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: 'TodoApp.WebApp/Client/dist/todoapp.client'
+          includeRootFolder: true
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          replaceExistingArchive: true
+      
+      - task: PublishPipelineArtifact@1
+        displayName: publish package to pipeline artifact
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          publishLocation: 'pipeline'
