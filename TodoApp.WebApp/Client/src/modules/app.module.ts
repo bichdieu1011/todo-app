@@ -34,7 +34,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
         {
           auth: {
             clientId: process.env['TD_CLIENT_ID'] as string,
-            redirectUri: 'http://locahost:4200',
+            redirectUri: process.env['TD_REDIRECT_URL'],
             authority: 'https://login.microsoftonline.com/'+ (process.env['TD_APP_ID'] as string)
           },
           cache: {
