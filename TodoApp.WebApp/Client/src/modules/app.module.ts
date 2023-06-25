@@ -9,7 +9,6 @@ import { SharedModule } from './shared/share.module';
 import { CategoryModule } from './category/category.module';
 import { ActionItemModule } from './action-item/action-item.module';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { NgxSpinnerService } from "ngx-spinner";
 import { MsalModule, MsalGuard, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { MsalInterceptor } from '@azure/msal-angular';
@@ -23,12 +22,12 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     HomeModule,
     SharedModule,
     CategoryModule,
     ActionItemModule,
     HttpClientModule,
-    AppRoutingModule,
     MsalModule.forRoot(new PublicClientApplication
       (
         {
@@ -60,17 +59,18 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
     )
   ],
   providers: [
-    CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,
       multi: true
     },
-    MsalGuard
+    MsalGuard,
+    CdkColumnDef
   ],
   bootstrap: [
-    AppComponent,
-    MsalRedirectComponent
+    MsalRedirectComponent,
+    AppComponent
+    
   ]
 })
 export class AppModule {
