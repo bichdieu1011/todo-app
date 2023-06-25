@@ -21,7 +21,7 @@ stages:
   - stage: Buid
     jobs:
     - job: build_job
-      displayName: Build and Deploy Job
+      displayName: Build Job
       condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))      
       steps:
       - checkout: self
@@ -51,7 +51,7 @@ stages:
     condition: succeeded()
     jobs:
     - job: publish_job
-      displayName: Build and Deploy Job
+      displayName: Publish Job
       steps:
         - task: ArchiveFiles@2
           inputs:
