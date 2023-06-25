@@ -9,25 +9,17 @@ import { IActionItemList } from "./model/actionItemList";
 import { WidgetType } from "../shared/enums/WidgetType";
 import { UpdateActionItemStatus } from "./model/updateActionItemStatusModel";
 import { ActionItemStatus } from "../shared/enums/ActionItemStatus";
-import { environment } from "../../environment/environment"
-import { AuthConfig } from "../shared/auth/auth-config";
-
 
 @Injectable()
 export class ActionItemService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
-    private http: HttpClient
-    constructor(private readonly httpHandler: HttpBackend, private authConfig: AuthConfig) {
-        this.http = new HttpClient(httpHandler);
-
+    constructor(private http: HttpClient) {
     }
-
 
     async getAll(id: number): Promise<Observable<IActionItemList>> {
         let url = this.baseUrl + 'actionItem/all/' + id;
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.get(url, { headers: header }).pipe<IActionItemList>(
+        return this.http.get(url).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
@@ -36,9 +28,8 @@ export class ActionItemService {
 
     async getAllByWidget(id: number, type: WidgetType, skip: number, take: number, sortBy: string, sortDirection: string): Promise<Observable<IActionItemList>> {
         let url = this.baseUrl + `actionItem/widget?categoryId=${id}&type=${type}&skip=${skip}&take=${take}&sortBy=${sortBy}&sortdirection=${sortDirection}`;
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.get(url, { headers: header }).pipe<IActionItemList>(
+        return this.http.get(url).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
@@ -47,9 +38,8 @@ export class ActionItemService {
 
     async add(record: IActionItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem';
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.post(url, record, { headers: header }).pipe<IActionResultModel>(
+        return this.http.post(url, record).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
@@ -58,9 +48,8 @@ export class ActionItemService {
 
     async remove(record: IActionItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem/' + record.id;
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.delete(url, { headers: header }).pipe<IActionResultModel>(
+        return this.http.delete(url).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
@@ -75,9 +64,8 @@ export class ActionItemService {
             currentStatus: record.status,
             newStatus: checked ? ActionItemStatus.Done : ActionItemStatus.Open
         };
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.put(url, model, { headers: header }).pipe<IActionResultModel>(
+        return this.http.put(url, model).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })

@@ -6,4 +6,4 @@
     </div>
 </div>
 <todo-footer></todo-footer>
-<a  href="#" (click)="logout()">Logout</a>
+<a  href="#" *ngIf="isUserLogin" (click)="logout()">Logout</a>

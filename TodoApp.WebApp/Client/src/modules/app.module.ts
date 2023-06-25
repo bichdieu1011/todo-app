@@ -32,9 +32,13 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
       (
         {
           auth: {
+            // clientId: process.env['TD_CLIENT_ID'] as string,
+            // redirectUri: process.env['TD_REDIRECT_URL'],
+            // authority: 'https://login.microsoftonline.com/'+ (process.env['TD_APP_ID'] as string)
+
             clientId: process.env['TD_CLIENT_ID'] as string,
             redirectUri: process.env['TD_REDIRECT_URL'],
-            authority: 'https://login.microsoftonline.com/'+ (process.env['TD_APP_ID'] as string)
+            authority: 'https://login.microsoftonline.com/' + (process.env['TD_APP_ID'] as string)
           },
           cache: {
             cacheLocation: 'localStorage',
@@ -52,7 +56,9 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
         interactionType: InteractionType.Redirect,
         protectedResourceMap: new Map(
           [
-            ["https://graph.microsoft.com/v1.0/me", ['user.Read']]
+            ["https://graph.microsoft.com/v1.0/me", ['user.Read']],
+            [(process.env['TD_BASE_URL'] as string), [(process.env['TD_API_SCOPE'] as string)]]
+
           ]
         )
       }
@@ -68,9 +74,8 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
     CdkColumnDef
   ],
   bootstrap: [
-    MsalRedirectComponent,
-    AppComponent
-    
+    AppComponent,
+    MsalRedirectComponent
   ]
 })
 export class AppModule {

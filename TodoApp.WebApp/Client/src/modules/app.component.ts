@@ -7,6 +7,7 @@ import {
 } from '@azure/msal-angular'
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, RedirectRequest } from "@azure/msal-browser";
 import { Subject, filter, takeUntil } from "rxjs";
+import { CategoryService } from "./category/category.service";
 @Component({
     selector: 'todo-app',
     styleUrls: ['./app.component.css'],
@@ -25,46 +26,28 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     }
-    async ngOnInit(): Promise<any> {
-
-        // this.msalBroadCastService.msalSubject$.pipe(
-        //     filter((ms: EventMessage) => ms.eventType == EventType.LOGIN_SUCCESS
-        //         || ms.eventType == EventType.SSO_SILENT_SUCCESS)
-        // )
-        //     .subscribe((res: EventMessage) => {
-        //         const payload = res.payload as AuthenticationResult;
-        //         this.authService.instance.setActiveAccount(payload.account);
-        //     });
+     ngOnInit(): any {
 
         this.msalBroadCastService.inProgress$
             .pipe(filter((status: InteractionStatus) => status === InteractionStatus.None)
                 , takeUntil(this._destroy))
             .subscribe(async () => {
-                await this.authService.instance.initialize();
                 this.isUserLogin = this.authService.instance.getAllAccounts().length > 0
-                if (!this.isUserLogin) {
-                    await this.logIn();
-                }
+                    if (!this.isUserLogin) {
+                        await this.logIn();
+                    }
+                
             });
 
-
-        // this.msalBroadCastService.inProgress$.pipe(
-        //     filter((interactionStatus: InteractionStatus) => interactionStatus == InteractionStatus.None),
-        //     takeUntil(this._destroy)
-        // ).subscribe(x => {
-        //     this.isUserLogin = this.authService.instance.getAllAccounts().length > 0
-        // });
     }
 
-    async logIn(): Promise<void> {
+   async logIn(): Promise<void> {
 
         if (this.msalGuardConfig.authRequest) {
-            // await this.authService.instance.initialize();
-            // this.authService.instance.handleRedirectPromise({})
-            await this.authService.instance.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
+           await this.authService.instance.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
         }
         else {
-            await this.authService.instance.loginRedirect();
+           await this.authService.instance.loginRedirect();
         }
     }
 

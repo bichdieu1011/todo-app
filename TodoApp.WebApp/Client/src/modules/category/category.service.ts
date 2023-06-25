@@ -7,23 +7,18 @@ import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
 import { environment } from "../../environment/environment"
 import { } from "node:process";
-import { AuthConfig } from "../shared/auth/auth-config";
 @Injectable()
 export class CategoryService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
 
-
-    private http: HttpClient
-    constructor(private readonly httpHandler: HttpBackend,
-        private authConfig: AuthConfig) {
-        this.http = new HttpClient(httpHandler);
+    constructor(
+        private http: HttpClient) {
     }
 
 
     async getAll(): Promise<Observable<ICategoryItem[]>> {
         let url = this.baseUrl + 'category/all';
-        var header = await this.authConfig.setHeaders();
-        return this.http.get(url, { headers: header }).pipe<ICategoryItem[]>(
+        return this.http.get(url).pipe<ICategoryItem[]>(
             tap((res: any) => {
                 return res;
             })
@@ -32,9 +27,8 @@ export class CategoryService {
 
     async add(record: ICategoryItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'category';
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.post(url, record, { headers: header }).pipe<IActionResultModel>(
+        return this.http.post(url, record).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
@@ -43,9 +37,8 @@ export class CategoryService {
 
     async delete(record: ICategoryItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'category/' + record.id;
-        var header = await this.authConfig.setHeaders();
 
-        return this.http.delete(url, { headers: header }).pipe<IActionResultModel>(
+        return this.http.delete(url).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
