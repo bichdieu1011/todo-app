@@ -40,8 +40,3 @@ variable "admin_password" {
   type = string
   default = ""
 }
-
-variable "application_object_id" {
-  type = string
-  default = ""
-}
