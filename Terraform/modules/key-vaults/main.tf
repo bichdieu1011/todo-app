@@ -50,9 +50,3 @@ resource "azurerm_key_vault_access_policy" "demoapp_key_vault_access_policy_for_
     "Purge"
   ]
 }
-
-resource "azurerm_role_assignment" "demoapp_key_vault_role_assign_to_azure_devops" {
-  role_definition_name = "Contributor" 
-  scope = azurerm_key_vault.demoapp_key_vault.id
-  principal_id = data.azurerm_client_config.current.object_id
-}
