@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoApp.Database;
 using TodoApp.Services;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TodoApp.WebApp
 {
@@ -44,6 +46,9 @@ namespace TodoApp.WebApp
                     });
             });
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(Configuration);
+
             services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -62,9 +67,10 @@ namespace TodoApp.WebApp
             }
 
             app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseCors("AllowAngularOrigins");
+            app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

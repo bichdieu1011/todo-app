@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using TodoApp.Services.ActionItemService;
 using TodoApp.Services.ActionItemService.Models;
 using static TodoApp.Services.Constant;
@@ -7,6 +9,8 @@ namespace TodoApp.WebApp.Controllers
 {
     [Route("actionItem")]
     [ApiController]
+    [Authorize]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:scopes")]
     public class ActionItemController : Controller
     {
         private readonly ILogger<ActionItemController> logger;

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using TodoApp.Services.CategoryService.Model;
 using TodoApp.Services.CategoryService.Service;
 
@@ -6,6 +8,8 @@ namespace TodoApp.WebApp.Controllers
 {
     [Route("category")]
     [ApiController]
+    [Authorize]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:scopes")]
     public class CategoryController : Controller
     {
         private readonly ILogger<CategoryController> logger;
