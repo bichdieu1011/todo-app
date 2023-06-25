@@ -47,11 +47,11 @@ stages:
           workingDir: 'TodoApp.WebApp/Client'
 
   - stage: Publish
+    dependsOn: Buid
+    condition: succeeded()
     jobs:
     - job: publish_job
       displayName: Build and Deploy Job
-      dependsOn: Buid
-      condition: succeeded()
       steps:
         - task: ArchiveFiles@2
           inputs:
