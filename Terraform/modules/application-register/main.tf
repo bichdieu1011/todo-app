@@ -1,7 +1,10 @@
+resource "random_uuid" "demo_application_scope_id" {}
 
 resource "azuread_application" "demo_application_registry" {
   display_name     = "ar-interview-us-demoapp-1"
   sign_in_audience = "AzureADMyOrg"
+
+  identifier_uris = ["api://ar-interview-us-demoapp-1"]
 
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000" # Microsoft Graph
@@ -25,7 +28,7 @@ resource "azuread_application" "demo_application_registry" {
     enabled                    = true
     type                       = "User"
     value                      = "api.scope"
-    id                         = "7d8b0d8b-10fa-4a37-b3ba-b70427b99f2d"
+    id                         = random_uuid.demo_application_scope_id.result
   }
   }
 
