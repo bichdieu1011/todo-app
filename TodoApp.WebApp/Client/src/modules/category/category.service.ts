@@ -7,14 +7,17 @@ import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
 import { environment } from "../../environment/environment"
 import { } from "node:process";
+import { AuthConfig } from "../shared/auth/auth-config";
 @Injectable()
 export class CategoryService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
+    headerOptions: any;
 
     private http: HttpClient
-    constructor(private readonly httpHandler: HttpBackend) {
+    constructor(private readonly httpHandler: HttpBackend,
+        authConfig: AuthConfig) {
         this.http = new HttpClient(httpHandler);
-
+        this.headerOptions = authConfig.setHeaders();
     }
 
 

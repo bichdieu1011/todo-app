@@ -10,14 +10,17 @@ import { WidgetType } from "../shared/enums/WidgetType";
 import { UpdateActionItemStatus } from "./model/updateActionItemStatusModel";
 import { ActionItemStatus } from "../shared/enums/ActionItemStatus";
 import { environment } from "../../environment/environment"
+import { AuthConfig } from "../shared/auth/auth-config";
 
 
 @Injectable()
 export class ActionItemService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
     private http: HttpClient
-    constructor(private readonly httpHandler: HttpBackend) {
+    headerOptions: any;
+    constructor(private readonly httpHandler: HttpBackend, authConfig: AuthConfig) {
         this.http = new HttpClient(httpHandler);
+        this.headerOptions = authConfig.setHeaders();
 
     }
 
@@ -25,7 +28,7 @@ export class ActionItemService {
     getAll(id: number): Observable<IActionItemList> {
         let url = this.baseUrl + 'actionItem/all/' + id;
 
-        return this.http.get(url).pipe<IActionItemList>(
+        return this.http.get(url, this.headerOptions).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
@@ -35,7 +38,7 @@ export class ActionItemService {
     getAllByWidget(id: number, type: WidgetType, skip: number, take: number, sortBy: string, sortDirection: string): Observable<IActionItemList> {
         let url = this.baseUrl + `actionItem/widget?categoryId=${id}&type=${type}&skip=${skip}&take=${take}&sortBy=${sortBy}&sortdirection=${sortDirection}`;
 
-        return this.http.get(url).pipe<IActionItemList>(
+        return this.http.get(url, this.headerOptions).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
@@ -45,7 +48,7 @@ export class ActionItemService {
     add(record: IActionItem): Observable<IActionResultModel> {
         let url = this.baseUrl + 'actionItem';
 
-        return this.http.post(url, record).pipe<IActionResultModel>(
+        return this.http.post(url, record, this.headerOptions).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })

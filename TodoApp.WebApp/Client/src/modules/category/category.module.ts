@@ -14,6 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddTodoCategoryComponent } from "./add/add-category.component";
+import { AuthConfig } from "../shared/auth/auth-config";
 
 @NgModule({
     imports: [BrowserModule,
@@ -30,7 +31,7 @@ import { AddTodoCategoryComponent } from "./add/add-category.component";
         ReactiveFormsModule
     ],
     declarations: [CategoryComponent, AddTodoCategoryComponent],
-    providers: [CategoryService],
+    providers: [CategoryService, AuthConfig],
     exports: [CategoryComponent, AddTodoCategoryComponent]
 })
 
