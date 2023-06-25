@@ -25,20 +25,31 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: Install Nuget Tool
 
 - task: NuGetCommand@2
+  displayName: Restore Nuget Package
   inputs:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
+  displayName: Build Project
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: Run Unit Test
+  inputs:
+    command: 'test'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+    testRunTitle: 'Run Unit Test'
+    workingDirectory: '$(Build.Repository.LocalPath)'
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish project build folder to Artifact
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'WebAppBuilt'
