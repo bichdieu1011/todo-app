@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpBackend } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { IActionItem } from "../action-item/model/actionItem";
@@ -15,8 +15,11 @@ import { environment } from "../../environment/environment"
 @Injectable()
 export class ActionItemService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
+    private http: HttpClient
+    constructor(private readonly httpHandler: HttpBackend) {
+        this.http = new HttpClient(httpHandler);
 
-    constructor(private http: HttpClient) { }
+    }
 
 
     getAll(id: number): Observable<IActionItemList> {

@@ -1,16 +1,21 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpBackend } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ICategoryItem } from "./model/categoryItem.model";
 import { IActionResultModel } from "../shared/models/IActionResult";
 import { Result } from "../shared/enums/Result";
 import { environment } from "../../environment/environment"
-import {  } from "node:process";
+import { } from "node:process";
 @Injectable()
 export class CategoryService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
-    constructor(private http: HttpClient) { }
+
+    private http: HttpClient
+    constructor(private readonly httpHandler: HttpBackend) {
+        this.http = new HttpClient(httpHandler);
+
+    }
 
 
     getAll(): Observable<ICategoryItem[]> {
