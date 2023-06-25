@@ -39,11 +39,12 @@ export class AddTodoCategoryComponent {
     }
 
 
-    onSaveClick(): void {
+    async onSaveClick(): Promise<void> {
         // save
 
         let record: ICategoryItem = { id: 0, name: this.newCategoryForm.controls['categoryName'].value.trim() };
-        this.categoryService.add(record).subscribe(res => {
+        var addRes = await this.categoryService.add(record);
+        addRes.subscribe(res => {
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
                 message: res.result == Result.Success ? ["Save succesfully"] : res.messages

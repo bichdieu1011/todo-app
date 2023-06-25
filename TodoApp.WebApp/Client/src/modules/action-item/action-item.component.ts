@@ -67,8 +67,9 @@ export class ActionItemComponent implements OnInit {
         this.loadWidget(WidgetType.Expired, this.widgetDetails[WidgetType.Today]);
     }
 
-    loadWidget(type: WidgetType, details: WidgetDetails) {
-        this.actionItemService.getAllByWidget(this.categoryId, type, details.pageSize * details.pageIndex, details.pageSize, details.sortby, details.sortDirection).subscribe((item: IActionItemList) => {
+    async loadWidget(type: WidgetType, details: WidgetDetails): Promise<void> {
+        var items = await this.actionItemService.getAllByWidget(this.categoryId, type, details.pageSize * details.pageIndex, details.pageSize, details.sortby, details.sortDirection);
+        items.subscribe((item: IActionItemList) => {
             switch (type) {
                 case WidgetType.Today:
                     this.today = item;
@@ -96,13 +97,13 @@ export class ActionItemComponent implements OnInit {
         });
     }
 
-    changeSorting(event: Sort, type: WidgetType): void {
+   async changeSorting(event: Sort, type: WidgetType): Promise<void> {
         this.widgetDetails[type].sortby = event.active;
         this.widgetDetails[type].sortDirection = event.direction;
-        this.loadWidget(type, this.widgetDetails[type]);
+        await this.loadWidget(type, this.widgetDetails[type]);
     }
 
-    changePaging(event: PageEvent, type: WidgetType): void {
+    async  changePaging(event: PageEvent, type: WidgetType): Promise<void> {
         if (event.previousPageIndex != event.pageIndex) {
             this.widgetDetails[type].pageIndex = event.pageIndex;
         }
@@ -111,16 +112,17 @@ export class ActionItemComponent implements OnInit {
             this.widgetDetails[type].pageSize = event.pageSize;
 
         }
-        this.loadWidget(type, this.widgetDetails[type]);
+        await this.loadWidget(type, this.widgetDetails[type]);
     }
 
-    edit(event: IActionItem, type: WidgetType): void {
+      async edit(event: IActionItem, type: WidgetType): Promise<void> {
         this.widgetDetails[type].pageIndex = 0;
         this.loadWidget(type, this.widgetDetails[type]);
     }
 
-    remove(event: IActionItem, type: WidgetType): void {
-        this.actionItemService.remove(event).subscribe(res => {
+   async remove(event: IActionItem, type: WidgetType): Promise<void> {
+       var removeResult = await this.actionItemService.remove(event);
+       removeResult.subscribe(res => {
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
                 message: res.result == Result.Success ? ["Remove succesfully"] : res.messages
@@ -136,12 +138,13 @@ export class ActionItemComponent implements OnInit {
 
     }
 
-    onChangeCheckbox(event: any, type: WidgetType): void {
+    async  onChangeCheckbox(event: any, type: WidgetType): Promise<void> {
         var isChecked = event.checked;
         var item = event.data;
         var fieldName = event.fieldName;
         this.widgetDetails[type].pageIndex = 0;
-        this.actionItemService.editstatus(event.data, isChecked).subscribe(res => {
+        var resulr = await this.actionItemService.editstatus(event.data, isChecked);
+        resulr.subscribe(res => {
 
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
@@ -153,7 +156,6 @@ export class ActionItemComponent implements OnInit {
             });
             this.loadWidget(type, this.widgetDetails[type]);
         });
-
 
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpBackend } from '@angular/common/http'
+import { HttpClient, HttpBackend, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ICategoryItem } from "./model/categoryItem.model";
@@ -11,40 +11,41 @@ import { AuthConfig } from "../shared/auth/auth-config";
 @Injectable()
 export class CategoryService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
-    headerOptions: any;
+
 
     private http: HttpClient
     constructor(private readonly httpHandler: HttpBackend,
-        authConfig: AuthConfig) {
+        private authConfig: AuthConfig) {
         this.http = new HttpClient(httpHandler);
-        this.headerOptions = authConfig.setHeaders();
     }
 
 
-    getAll(): Observable<ICategoryItem[]> {
+    async getAll(): Promise<Observable<ICategoryItem[]>> {
         let url = this.baseUrl + 'category/all';
-
-        return this.http.get(url).pipe<ICategoryItem[]>(
+        var header = await this.authConfig.setHeaders();
+        return this.http.get(url, { headers: header }).pipe<ICategoryItem[]>(
             tap((res: any) => {
                 return res;
             })
         );
     }
 
-    add(record: ICategoryItem): Observable<IActionResultModel> {
+    async add(record: ICategoryItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'category';
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.post(url, record).pipe<IActionResultModel>(
+        return this.http.post(url, record, { headers: header }).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
         );
     }
 
-    delete(record: ICategoryItem): Observable<IActionResultModel> {
+    async delete(record: ICategoryItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'category/' + record.id;
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.delete(url).pipe<IActionResultModel>(
+        return this.http.delete(url, { headers: header }).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })

@@ -58,13 +58,14 @@ export class AddActionItemComponent implements OnInit {
         return null;
     }
 
-    onSaveClick(): void {
+    async onSaveClick(): Promise<void> {
         this.spinner.show();
         this.record.content = this.newItemForm.controls['content'].value.trim();
         this.record.start = this.newItemForm.controls['start'].value;
         this.record.end = this.newItemForm.controls['end'].value;
 
-        this.actionItemService.add(this.record).subscribe(res => {
+        var addResult = await this.actionItemService.add(this.record);
+        addResult.subscribe(res => {
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
                 message: res.result == Result.Success ? ["Save succesfully"] : res.messages

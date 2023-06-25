@@ -38,8 +38,9 @@ export class CategoryComponent implements OnInit {
         this.loadData();
     }
 
-    loadData(): void {
-        this.categoryService.getAll().subscribe(item => {
+    async loadData(): Promise<void> {
+        var allItem = await this.categoryService.getAll();
+        allItem.subscribe(item => {
             this.categories = item;
         });
     }
@@ -61,8 +62,9 @@ export class CategoryComponent implements OnInit {
 
     }
 
-    deleteCategory(item: ICategoryItem): void {
-        this.categoryService.delete(item).subscribe(res =>{
+    async deleteCategory(item: ICategoryItem): Promise<void> {
+        var deleteRes = await this.categoryService.delete(item);
+        deleteRes.subscribe(res =>{
             let notification: IMessage = {
                 type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
                 message: res.result == Result.Success ? ["Remove succesfully"] : res.messages

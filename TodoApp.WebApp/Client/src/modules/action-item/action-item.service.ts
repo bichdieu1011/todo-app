@@ -17,48 +17,50 @@ import { AuthConfig } from "../shared/auth/auth-config";
 export class ActionItemService {
     private baseUrl: string = process.env['TD_BASE_URL'] as string;
     private http: HttpClient
-    headerOptions: any;
-    constructor(private readonly httpHandler: HttpBackend, authConfig: AuthConfig) {
+    constructor(private readonly httpHandler: HttpBackend, private authConfig: AuthConfig) {
         this.http = new HttpClient(httpHandler);
-        this.headerOptions = authConfig.setHeaders();
 
     }
 
 
-    getAll(id: number): Observable<IActionItemList> {
+    async getAll(id: number): Promise<Observable<IActionItemList>> {
         let url = this.baseUrl + 'actionItem/all/' + id;
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.get(url, this.headerOptions).pipe<IActionItemList>(
+        return this.http.get(url, { headers: header }).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
         );
     }
 
-    getAllByWidget(id: number, type: WidgetType, skip: number, take: number, sortBy: string, sortDirection: string): Observable<IActionItemList> {
+    async getAllByWidget(id: number, type: WidgetType, skip: number, take: number, sortBy: string, sortDirection: string): Promise<Observable<IActionItemList>> {
         let url = this.baseUrl + `actionItem/widget?categoryId=${id}&type=${type}&skip=${skip}&take=${take}&sortBy=${sortBy}&sortdirection=${sortDirection}`;
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.get(url, this.headerOptions).pipe<IActionItemList>(
+        return this.http.get(url, { headers: header }).pipe<IActionItemList>(
             tap((res: any) => {
                 return res;
             })
         );
     }
 
-    add(record: IActionItem): Observable<IActionResultModel> {
+    async add(record: IActionItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem';
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.post(url, record, this.headerOptions).pipe<IActionResultModel>(
+        return this.http.post(url, record, { headers: header }).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
         );
     }
 
-    remove(record: IActionItem): Observable<IActionResultModel> {
+    async remove(record: IActionItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem/' + record.id;
+        var header = await this.authConfig.setHeaders();
 
-        return this.http.delete(url).pipe<IActionResultModel>(
+        return this.http.delete(url, { headers: header }).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })
@@ -66,14 +68,16 @@ export class ActionItemService {
     }
 
 
-    editstatus(record: IActionItem, checked: boolean): Observable<IActionResultModel> {
+    async editstatus(record: IActionItem, checked: boolean): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem/editstatus/' + record.id;
         let model: UpdateActionItemStatus = {
             id: record.id,
             currentStatus: record.status,
             newStatus: checked ? ActionItemStatus.Done : ActionItemStatus.Open
         };
-        return this.http.put(url, model).pipe<IActionResultModel>(
+        var header = await this.authConfig.setHeaders();
+
+        return this.http.put(url, model, { headers: header }).pipe<IActionResultModel>(
             tap((res: any) => {
                 return res;
             })

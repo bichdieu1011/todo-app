@@ -14,10 +14,8 @@ export class AuthConfig {
 
     }
 
-    public async setHeaders(): Promise<any> {
-        const httpOptions = {
-            headers: new HttpHeaders()
-        };
+    public async setHeaders(): Promise<HttpHeaders> {
+        let httpOptions = new HttpHeaders();
         let accounts = this.authService.instance.getAllAccounts();
         if (accounts.length > 0) {
             var silentRequest: SilentRequest = {
@@ -26,7 +24,7 @@ export class AuthConfig {
             };
             try {
                 var res = await this.authService.instance.acquireTokenSilent(silentRequest);
-                httpOptions.headers = httpOptions.headers.set('Authorization', `Bearer ${res.accessToken}`);
+                httpOptions = httpOptions.set('Authorization', `Bearer ${res.accessToken}`);
                 return httpOptions;
 
             }
@@ -35,7 +33,7 @@ export class AuthConfig {
                     this.authService.instance
                         .acquireTokenPopup(silentRequest)
                         .then(function (accessTokenResponse) {                        // Call your API with token
-                            httpOptions.headers = httpOptions.headers.set('Authorization', `Bearer ${accessTokenResponse.accessToken}`);
+                            httpOptions = httpOptions.set('Authorization', `Bearer ${accessTokenResponse.accessToken}`);
 
                         })
                         .catch(function (error) {
@@ -44,9 +42,7 @@ export class AuthConfig {
                         });
                 }
             }
-
         }
-
-
+        return httpOptions;
     }
 }
