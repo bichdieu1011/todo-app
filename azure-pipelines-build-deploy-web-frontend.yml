@@ -12,19 +12,18 @@ trigger:
     include:
       - TodoApp.WebApp/Client
       - azure-pipelines-build-deploy-web-frontend.yml
+pool:
+  vmImage: ubuntu-latest
+variables:
+  - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
 
 stages:
   - stage: Buid
     jobs:
     - job: build_job
       displayName: Build and Deploy Job
-      condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
-      pool:
-        vmImage: ubuntu-latest
-      variables:
-      - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
+      condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))      
       steps:
-      
       - checkout: self
         submodules: true
       - task: NodeAndNpmTool@1
@@ -51,11 +50,8 @@ stages:
     jobs:
     - job: publish_job
       displayName: Build and Deploy Job
-      condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
-      pool:
-        vmImage: ubuntu-latest
-      variables:
-      - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
+      dependsOn: Buid
+      condition: succeeded()
       steps:
         - task: ArchiveFiles@2
           inputs:
