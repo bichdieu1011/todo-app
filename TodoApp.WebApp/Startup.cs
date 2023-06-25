@@ -42,7 +42,8 @@ namespace TodoApp.WebApp
                         b.WithOrigins(Configuration["AllowAngularOrigins"])
                                     .AllowAnyHeader()
                                     .AllowAnyMethod()
-                                    .AllowAnyOrigin();
+                                    .AllowAnyOrigin()
+                                    .AllowCredentials();
                     });
             });
 
