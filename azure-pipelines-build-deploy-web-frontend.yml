@@ -46,12 +46,10 @@ stages:
           customCommand: run build --configuration=production
           workingDir: 'TodoApp.WebApp/Client'
 
-  - stage: Publish
-    dependsOn: Buid
-    condition: succeeded()
-    jobs:
     - job: publish_job
       displayName: Publish Job
+      dependsOn: build_job
+      condition: succeeded()
       steps:
         - task: ArchiveFiles@2
           inputs:
