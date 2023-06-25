@@ -16,7 +16,7 @@ trigger:
 stages:
   - stage: Buid
     jobs:
-    - job: build_and_publish_job
+    - job: build_job
       displayName: Build and Deploy Job
       condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
       pool:
@@ -28,32 +28,45 @@ stages:
       - checkout: self
         submodules: true
       - task: NodeAndNpmTool@1
+        displayName: Install Node and Npm tool
         inputs:
          versionSpec: 18.x
 
       - task: Npm@1
         name: Run_Npm_Install
+        displayName: npm install
         inputs:
           command: 'install'
           workingDir: 'TodoApp.WebApp/Client'
       
-
       - task: Npm@1
         name: buildAngularWebPackage
+        displayName: build angular package
         inputs:
           command: custom
           customCommand: run build --configuration=production
           workingDir: 'TodoApp.WebApp/Client'
-      
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: 'TodoApp.WebApp/Client/dist/todoapp.client'
-          includeRootFolder: true
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          replaceExistingArchive: true
-      
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          publishLocation: 'pipeline'
+
+  - stage: Publish
+    jobs:
+    - job: publish_job
+      displayName: Build and Deploy Job
+      condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
+      pool:
+        vmImage: ubuntu-latest
+      variables:
+      - group: Azure-Static-Web-Apps-kind-field-08e5a8a10-variable-group
+      steps:
+        - task: ArchiveFiles@2
+          inputs:
+            rootFolderOrFile: 'TodoApp.WebApp/Client/dist/todoapp.client'
+            includeRootFolder: true
+            archiveType: 'zip'
+            archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+            replaceExistingArchive: true
+        
+        - task: PublishPipelineArtifact@1
+          displayName: publish package to pipeline artifact
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+            publishLocation: 'pipeline'
