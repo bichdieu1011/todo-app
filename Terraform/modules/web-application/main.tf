@@ -57,7 +57,7 @@ locals {
   app_settings = {    
     "AzureAd__TenantId"     = var.tenant_id
     "AzureAd__scopes"     = "api.scope"
-    "AzureAd__ClientId" = var.client_secret
+    "AzureAd__ClientId" = var.client_id
     "AzureAd__ClientSecret" = var.client_secret
     "AzureAd__KeyVaultName" = var.KeyVaultName
 
