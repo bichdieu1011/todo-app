@@ -10,7 +10,7 @@ namespace TodoApp.WebApp.Controllers
     [Route("actionItem")]
     [ApiController]
     [Authorize]
-    [RequiredScope(RequiredScopesConfigurationKey = "AppSettings:AzureAd:scopes")]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:scopes")]
     public class ActionItemController : Controller
     {
         private readonly ILogger<ActionItemController> logger;

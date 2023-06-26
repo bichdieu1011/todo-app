@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using TodoApp.Database;
 using TodoApp.Services;
-using Microsoft.Identity.Web;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TodoApp.WebApp
 {
@@ -39,7 +40,7 @@ namespace TodoApp.WebApp
                 options.AddPolicy("AllowAngularOrigins",
                     b =>
                     {
-                        b.WithOrigins(Configuration["AppSettings:AllowAngularOrigins"])
+                        b.WithOrigins(Configuration["AllowAngularOrigins"])
                                     .AllowAnyHeader()
                                     .AllowAnyMethod()
                                     .AllowAnyOrigin();
@@ -47,13 +48,16 @@ namespace TodoApp.WebApp
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration, "AppSettings:AzureAd");
+                .AddMicrosoftIdentityWebApi(Configuration);
 
             services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoAppApi", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
