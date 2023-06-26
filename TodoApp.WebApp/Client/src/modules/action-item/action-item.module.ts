@@ -11,9 +11,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { FormsModule ,ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { AddActionItemComponent } from "./add/add-action-item.component";
 import { MySpinnerService } from "../shared/services/spinner.service";
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -32,10 +32,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
         FormsModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     declarations: [ActionItemComponent, AddActionItemComponent],
-    providers: [ActionItemService, NgxSpinnerService],
+    providers: [
+        ActionItemService,
+        NgxSpinnerService
+    ],
     exports: [ActionItemComponent]
 })
 

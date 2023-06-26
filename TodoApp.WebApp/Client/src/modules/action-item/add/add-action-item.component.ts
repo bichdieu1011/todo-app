@@ -1,3 +1,6 @@
+import { Moment, locale, utc } from 'moment';
+import * as moment from 'moment';
+import 'moment-timezone'
 import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -14,7 +17,10 @@ import { MySpinnerService } from "src/modules/shared/services/spinner.service";
 @Component({
     selector: "add-action-item",
     templateUrl: "./add-action-item.component.html",
-    styleUrls: ["./add-action-item.component.css"]
+    styleUrls: ["./add-action-item.component.css"],
+    providers: [
+      
+    ]
 })
 
 export class AddActionItemComponent implements OnInit {
@@ -34,14 +40,14 @@ export class AddActionItemComponent implements OnInit {
         this.record.categoryId = data;
         this.newItemForm = this.fb.group({
             'content': [this.record.content, Validators.required],
-            'start': [this.record.start, Validators.required],
-            'end': [this.record.end, Validators.required],
-        },{validators : [this.checkDates,this.checkString]});
-        
+            'start': ['', Validators.required],
+            'end': ['', Validators.required],
+        }, { validators: [this.checkDates, this.checkString] });
+
     }
 
     ngOnInit(): void {
-        
+
     }
 
     checkDates(group: FormGroup) {
@@ -61,8 +67,10 @@ export class AddActionItemComponent implements OnInit {
     async onSaveClick(): Promise<void> {
         this.spinner.show();
         this.record.content = this.newItemForm.controls['content'].value.trim();
-        this.record.start = this.newItemForm.controls['start'].value;
-        this.record.end = this.newItemForm.controls['end'].value;
+        this.record.start = moment.tz(this.newItemForm.controls['start'].value, moment.tz.guess()).format("yyyy-MM-DD") + "T00:00:00.000Z";
+        this.record.end = moment.tz(this.newItemForm.controls['end'].value, moment.tz.guess()).format("yyyy-MM-DD") + "T00:00:00.000Z";
+        // this.record.start = moment.normalizeUnits(this.newItemForm.controls['start'].value;
+        // this.record.end = this.newItemForm.controls['end'].value;
 
         var addResult = await this.actionItemService.add(this.record);
         addResult.subscribe(res => {
@@ -86,5 +94,5 @@ export class AddActionItemComponent implements OnInit {
 
     }
 
-   
+
 }
