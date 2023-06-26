@@ -48,7 +48,7 @@ variable "tenant_id" {
   default = ""
 }
 
-variable "KeyVaultName" {
+variable "keyvault_name" {
   description = "name of key-vault service"
   type = string
   default = ""

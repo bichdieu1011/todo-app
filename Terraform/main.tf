@@ -84,5 +84,6 @@ module "webapplication" {
   tenant_id       = var.tenant_id
   client_secret   = module.app_register.client_secret
   azure_devops_project_id = var.azure_devops_project_id
+  keyvault_name   = module.app_key_vault.key_vault_name
   depends_on      = [module.resource-group,  module.app_register, module.app_db, module.app_key_vault]
 }
