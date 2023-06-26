@@ -4,7 +4,7 @@ resource "azuread_application" "demo_application_registry" {
   display_name     = "ar-interview-us-demoapp-1"
   sign_in_audience = "AzureADMyOrg"
 
-  identifier_uris = ["api://${azuread_application.demo_application_registry.id}"]
+  identifier_uris = ["api://ar-interview-us-demoapp-1"]
 
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000" # Microsoft Graph
