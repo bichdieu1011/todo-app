@@ -131,7 +131,7 @@ namespace TodoApp.Database.Migrations
                     b.HasOne("TodoApp.Database.Entities.User", "User")
                         .WithMany("ActionItems")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -144,7 +144,7 @@ namespace TodoApp.Database.Migrations
                     b.HasOne("TodoApp.Database.Entities.User", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

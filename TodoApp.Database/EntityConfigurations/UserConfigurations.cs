@@ -17,12 +17,12 @@ namespace TodoApp.Database.EntityConfigurations
             builder.HasMany(s => s.ActionItems)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(s => s.Categories)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

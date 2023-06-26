@@ -58,7 +58,7 @@ namespace TodoApp.Database.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Category_User_UserId",
@@ -66,7 +66,7 @@ namespace TodoApp.Database.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

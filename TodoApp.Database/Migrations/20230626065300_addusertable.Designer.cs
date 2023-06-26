@@ -12,7 +12,7 @@ using TodoApp.Database;
 namespace TodoApp.Database.Migrations
 {
     [DbContext(typeof(ToDoAppContext))]
-    [Migration("20230626062456_addusertable")]
+    [Migration("20230626065300_addusertable")]
     partial class addusertable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,7 +133,7 @@ namespace TodoApp.Database.Migrations
                     b.HasOne("TodoApp.Database.Entities.User", "User")
                         .WithMany("ActionItems")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -146,7 +146,7 @@ namespace TodoApp.Database.Migrations
                     b.HasOne("TodoApp.Database.Entities.User", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

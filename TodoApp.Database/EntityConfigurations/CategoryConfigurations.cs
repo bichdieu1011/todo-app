@@ -16,7 +16,7 @@ namespace TodoApp.Database.EntityConfigurations
                 .HasForeignKey(s => s.CategoryId)
                 .IsRequired();
 
-            builder.HasOne(s => s.User).WithMany().HasForeignKey(s => s.UserId);
+            builder.HasOne(s => s.User).WithMany(s => s.Categories).HasForeignKey(s => s.UserId);
         }
     }
 }
