@@ -34,7 +34,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            backendServiceArm: $(BACKEND_SERVICE_ARM)
+            backendServiceArm: '$(BACKEND_SERVICE_ARM)'
             backendAzureRmResourceGroupName: 'demoapp-terraform'
             backendAzureRmStorageAccountName: 'demoappterraform'
             backendAzureRmContainerName: 'tfcontainer'
@@ -51,7 +51,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
-            environmentServiceNameAzureRM: $(BACKEND_SERVICE_ARM)
+            environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
         
         - task: ArchiveFiles@2
           inputs:
