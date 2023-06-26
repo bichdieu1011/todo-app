@@ -59,7 +59,7 @@ locals {
     "AzureAd__scopes"     = "api.scope"
     "AzureAd__ClientId" = var.client_id
     "AzureAd__ClientSecret" = var.client_secret
-    "AzureAd__KeyVaultName" = var.KeyVaultName
+    "AzureAd__KeyVaultName" = var.keyvault_name
 
     AllowAngularOrigins = "https://${azurerm_static_site.demoapp_client.default_host_name}"
   }
