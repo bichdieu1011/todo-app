@@ -54,11 +54,13 @@ locals {
     source      = var.app_source
   }
 
-  app_settings = {
-    "Secret--KeyVaultName" = var.KeyVaultName
-    "Secret--TenantId"     = var.tenant_id
-    "Secret--ClientId"     = var.client_id
-    "Secret--ClientSecret" = var.client_secret
+  app_settings = {    
+    "AzureAd__TenantId"     = var.tenant_id
+    "AzureAd__scopes"     = var.scopes
+    "AzureAd__ClientId" = var.client_secret
+    "AzureAd__ClientSecret" = var.client_secret
+    "AzureAd__KeyVaultName" = var.KeyVaultName
+
     AllowAngularOrigins = "https://${azurerm_static_site.demoapp_client.default_host_name}"
   }
 }
