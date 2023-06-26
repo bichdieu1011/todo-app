@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryService } from "../category.service";
@@ -8,6 +8,7 @@ import { IMessage } from "src/modules/shared/models/IMessage";
 import { NotificationType } from "src/modules/shared/enums/NotificationType";
 import { Result } from "src/modules/shared/enums/Result";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
     selector: "add-todo-category",
@@ -15,16 +16,15 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
     styleUrls: ["./add-category.component.css"]
 })
 
-export class AddTodoCategoryComponent {
+export class AddTodoCategoryComponent implements OnDestroy {
 
     newCategoryForm: FormGroup;
-    @Output()
-    afterAddNewCategory = new EventEmitter();
 
     constructor(public dialogRef: MatDialogRef<AddTodoCategoryComponent>,
         private categoryService: CategoryService,
         private _snackBar: MatSnackBar,
-        private fb: FormBuilder) {
+        private fb: FormBuilder,
+        private _spinner: NgxSpinnerService) {
 
         this.newCategoryForm = this.fb.group({
             'categoryName': ['', Validators.required]
@@ -40,8 +40,7 @@ export class AddTodoCategoryComponent {
 
 
     async onSaveClick(): Promise<void> {
-        // save
-
+        this._spinner.show();
         let record: ICategoryItem = { id: 0, name: this.newCategoryForm.controls['categoryName'].value.trim() };
         var addRes = await this.categoryService.add(record);
         addRes.subscribe(res => {
@@ -53,14 +52,16 @@ export class AddTodoCategoryComponent {
                 data: notification,
                 duration: 3000
             });
-            this.afterAddNewCategory.emit();
-            this.dialogRef.close();
+            
+            this.dialogRef.close({type: 'submit'});
         });
 
     }
 
     onNoClick(): void {
         this.dialogRef.close();
+    }
 
+    ngOnDestroy(): void {        
     }
 }

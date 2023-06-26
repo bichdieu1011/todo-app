@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppRoutingModule } from './app.routes';
@@ -13,6 +14,8 @@ import { MsalModule, MsalGuard, MsalRedirectComponent } from '@azure/msal-angula
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { MsalInterceptor } from '@azure/msal-angular';
 import { } from "node:process";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator.userAgent.indexOf('Trident') > 1;
 
@@ -21,6 +24,9 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
     AppComponent
   ],
   imports: [
+    BrowserAnimationsModule ,
+    NgxSpinnerModule ,
+
     BrowserModule,
     AppRoutingModule,
     HomeModule,
@@ -71,12 +77,13 @@ const isIE = window.navigator.userAgent.indexOf('MSIE') > -1 || window.navigator
       multi: true
     },
     MsalGuard,
-    CdkColumnDef
+    CdkColumnDef,
   ],
   bootstrap: [
     AppComponent,
     MsalRedirectComponent
-  ]
+  ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 

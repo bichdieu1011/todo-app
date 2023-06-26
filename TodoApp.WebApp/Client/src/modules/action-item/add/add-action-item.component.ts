@@ -1,7 +1,7 @@
 import { Moment, locale, utc } from 'moment';
 import * as moment from 'moment';
 import 'moment-timezone'
-import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
+import { Component, Inject, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,28 +12,26 @@ import { NotificationType } from "src/modules/shared/enums/NotificationType";
 import { Result } from "src/modules/shared/enums/Result";
 import { ActionItemService } from "../action-item.service";
 import { IActionItem } from "../model/actionItem";
-import { MySpinnerService } from "src/modules/shared/services/spinner.service";
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: "add-action-item",
     templateUrl: "./add-action-item.component.html",
     styleUrls: ["./add-action-item.component.css"],
     providers: [
-      
+
     ]
 })
 
-export class AddActionItemComponent implements OnInit {
+export class AddActionItemComponent implements OnInit, OnDestroy {
     record: IActionItem;
 
-    @Output()
-    afterAddNewItem = new EventEmitter();
     newItemForm: FormGroup;
     constructor(public dialogRef: MatDialogRef<AddActionItemComponent>,
         @Inject(MAT_DIALOG_DATA) public data: number,
         private actionItemService: ActionItemService,
         private _snackBar: MatSnackBar,
-        private spinner: MySpinnerService,
+        private spinner: NgxSpinnerService,
         private fb: FormBuilder) {
 
         this.record = new IActionItem();
@@ -82,9 +80,7 @@ export class AddActionItemComponent implements OnInit {
                 data: notification,
                 duration: 3000
             });
-            this.afterAddNewItem.emit();
-            this.dialogRef.close();
-            this.spinner.hide();
+            this.dialogRef.close({ type: 'submit' });
         });
 
     }
@@ -92,6 +88,10 @@ export class AddActionItemComponent implements OnInit {
     onNoClick(): void {
         this.dialogRef.close();
 
+    }
+
+    ngOnDestroy(): void {
+        this.record = new IActionItem();        
     }
 
 

@@ -14,6 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddTodoCategoryComponent } from "./add/add-category.component";
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
     imports: [BrowserModule,
@@ -27,7 +28,8 @@ import { AddTodoCategoryComponent } from "./add/add-category.component";
         MatButtonModule,
         MatSnackBarModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxSpinnerModule
     ],
     declarations: [CategoryComponent, AddTodoCategoryComponent],
     providers: [CategoryService],

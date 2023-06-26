@@ -1,5 +1,4 @@
-
-.btn-add-category{
+.btn-add-category {
     padding: 8px 12px;
     margin-left: 10px;
     font-size: 14px;
@@ -44,6 +43,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.title.selected {
+    color: #377ad1;
+}
+
+.title.selected:hover {
+    cursor: not-allowed;
+}
+
 
 .action-button {
     padding: 8px 12px;

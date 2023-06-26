@@ -7,7 +7,8 @@ import {
 } from '@azure/msal-angular'
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, RedirectRequest } from "@azure/msal-browser";
 import { Subject, filter, takeUntil } from "rxjs";
-import { CategoryService } from "./category/category.service";
+
+import { NgxSpinnerService } from "ngx-spinner";
 @Component({
     selector: 'todo-app',
     styleUrls: ['./app.component.css'],
@@ -21,33 +22,32 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
         private msalBroadCastService: MsalBroadcastService,
-        private authService: MsalService
+        private authService: MsalService,
+        private ngxSpinner: NgxSpinnerService
     ) {
 
-
     }
-     ngOnInit(): any {
-
+    ngOnInit(): any {
         this.msalBroadCastService.inProgress$
             .pipe(filter((status: InteractionStatus) => status === InteractionStatus.None)
                 , takeUntil(this._destroy))
             .subscribe(async () => {
                 this.isUserLogin = this.authService.instance.getAllAccounts().length > 0
-                    if (!this.isUserLogin) {
-                        await this.logIn();
-                    }
-                
+                if (!this.isUserLogin) {
+                    await this.logIn();
+                }
+
             });
 
     }
 
-   async logIn(): Promise<void> {
+    async logIn(): Promise<void> {
 
         if (this.msalGuardConfig.authRequest) {
-           await this.authService.instance.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
+            await this.authService.instance.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
         }
         else {
-           await this.authService.instance.loginRedirect();
+            await this.authService.instance.loginRedirect();
         }
     }
 

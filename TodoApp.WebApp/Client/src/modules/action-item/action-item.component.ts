@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActionItemService } from "./action-item.service";
 import { IColumn } from "../shared/models/IColumn";
 import { IActionItem } from "./model/actionItem";
@@ -9,7 +9,6 @@ import { IActionItemList } from "./model/actionItemList";
 import { MatDialog } from "@angular/material/dialog";
 import { AddActionItemComponent } from "./add/add-action-item.component";
 import { FieldType } from "../shared/enums/FieldType";
-import { MySpinnerService } from "../shared/services/spinner.service";
 import { NgxSpinnerService } from 'ngx-spinner';
 import { WidgetDetails } from "../shared/models/WidgetDetails";
 import { IMessage } from "../shared/models/IMessage";
@@ -17,6 +16,7 @@ import { NotificationType } from "../shared/enums/NotificationType";
 import { Result } from "../shared/enums/Result";
 import { NotificationPopupComponent } from "../shared/components/notification/notification.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ConfirmationDialogComponent } from "../shared/components/confirmation-dialog/confirmation.component";
 
 
 @Component({
@@ -25,7 +25,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
     templateUrl: './action-item.component.html'
 })
 
-export class ActionItemComponent implements OnInit {
+export class ActionItemComponent implements OnInit, OnDestroy {
+
     today: IActionItemList = {} as IActionItemList;
     expired: IActionItemList = {} as IActionItemList;
     tomorrow: IActionItemList = {} as IActionItemList;
@@ -42,10 +43,12 @@ export class ActionItemComponent implements OnInit {
         { displayName: "Deadline", fieldName: "end", sortable: true, type: FieldType.datetime }
     ];
 
+
+
     constructor(private actionItemService: ActionItemService,
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
-        private spinner: MySpinnerService) {
+        private spinner: NgxSpinnerService) {
 
     }
 
@@ -58,13 +61,16 @@ export class ActionItemComponent implements OnInit {
         ];
     }
 
-    onViewListActionItem(id: number): void {
+    public onViewListActionItem(id: number): void {
         this.spinner.show();
         this.categoryId = id;
-        this.loadWidget(WidgetType.Today, this.widgetDetails[WidgetType.Today]);
-        this.loadWidget(WidgetType.Tomorrow, this.widgetDetails[WidgetType.Today]);
-        this.loadWidget(WidgetType.ThisWeek, this.widgetDetails[WidgetType.Today]);
-        this.loadWidget(WidgetType.Expired, this.widgetDetails[WidgetType.Today]);
+        Promise.all([
+            this.loadWidget(WidgetType.Today, this.widgetDetails[WidgetType.Today]),
+            this.loadWidget(WidgetType.Tomorrow, this.widgetDetails[WidgetType.Tomorrow]),
+            this.loadWidget(WidgetType.ThisWeek, this.widgetDetails[WidgetType.ThisWeek]),
+            this.loadWidget(WidgetType.Expired, this.widgetDetails[WidgetType.Expired])
+        ]).then(s => this.spinner.hide());
+
     }
 
     async loadWidget(type: WidgetType, details: WidgetDetails): Promise<void> {
@@ -89,21 +95,25 @@ export class ActionItemComponent implements OnInit {
     }
 
     addActionItem(): void {
-        this.spinner.show();
         const dialogRef = this.dialog.open(AddActionItemComponent, { height: '500px', width: '500px', data: this.categoryId });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.onViewListActionItem(this.categoryId);
+            if (result.type)
+                this.onViewListActionItem(this.categoryId);
         });
     }
 
-   async changeSorting(event: Sort, type: WidgetType): Promise<void> {
+    async changeSorting(event: Sort, type: WidgetType): Promise<void> {
+        this.spinner.show();
+
         this.widgetDetails[type].sortby = event.active;
         this.widgetDetails[type].sortDirection = event.direction;
-        await this.loadWidget(type, this.widgetDetails[type]);
+        this.loadWidget(type, this.widgetDetails[type]).then(s => this.spinner.hide());
     }
 
-    async  changePaging(event: PageEvent, type: WidgetType): Promise<void> {
+    async changePaging(event: PageEvent, type: WidgetType): Promise<void> {
+        this.spinner.show();
+
         if (event.previousPageIndex != event.pageIndex) {
             this.widgetDetails[type].pageIndex = event.pageIndex;
         }
@@ -112,36 +122,49 @@ export class ActionItemComponent implements OnInit {
             this.widgetDetails[type].pageSize = event.pageSize;
 
         }
-        await this.loadWidget(type, this.widgetDetails[type]);
+        this.loadWidget(type, this.widgetDetails[type]).then(s => this.spinner.hide());
+
     }
 
-      async edit(event: IActionItem, type: WidgetType): Promise<void> {
+    async edit(event: IActionItem, type: WidgetType): Promise<void> {
+        this.spinner.show();
+
         this.widgetDetails[type].pageIndex = 0;
-        this.loadWidget(type, this.widgetDetails[type]);
+        this.loadWidget(type, this.widgetDetails[type]).then(s => this.spinner.hide());
+
     }
 
-   async remove(event: IActionItem, type: WidgetType): Promise<void> {
-       var removeResult = await this.actionItemService.remove(event);
-       removeResult.subscribe(res => {
-            let notification: IMessage = {
-                type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
-                message: res.result == Result.Success ? ["Remove succesfully"] : res.messages
-            };
-            this._snackBar.openFromComponent(NotificationPopupComponent, {
-                data: notification,
-                duration: 3000
-            });
+    async remove(event: IActionItem, type: WidgetType): Promise<void> {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: `Are you sure to remove this item. This action could not be undo!` });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (!result.type) return;
 
-            this.widgetDetails[type].pageIndex = 0;
-            this.loadWidget(type, this.widgetDetails[type]);
+            this.spinner.show();
+
+            var removeResult = await this.actionItemService.remove(event);
+            removeResult.subscribe(res => {
+                let notification: IMessage = {
+                    type: res.result == Result.Error ? NotificationType.Error : NotificationType.Information,
+                    message: res.result == Result.Success ? ["Remove succesfully"] : res.messages
+                };
+                this._snackBar.openFromComponent(NotificationPopupComponent, {
+                    data: notification,
+                    duration: 3000
+                });
+
+                this.widgetDetails[type].pageIndex = 0;
+                this.loadWidget(type, this.widgetDetails[type])
+                    .then(s => this.spinner.hide());
+
+            });
         });
 
     }
 
-    async  onChangeCheckbox(event: any, type: WidgetType): Promise<void> {
+    async onChangeCheckbox(event: any, type: WidgetType): Promise<void> {
+        this.spinner.show();
         var isChecked = event.checked;
-        var item = event.data;
-        var fieldName = event.fieldName;
+
         this.widgetDetails[type].pageIndex = 0;
         var resulr = await this.actionItemService.editstatus(event.data, isChecked);
         resulr.subscribe(res => {
@@ -154,9 +177,13 @@ export class ActionItemComponent implements OnInit {
                 data: notification,
                 duration: 3000
             });
-            this.loadWidget(type, this.widgetDetails[type]);
+            this.loadWidget(type, this.widgetDetails[type]).then(s => this.spinner.hide());
         });
 
+    }
+
+    ngOnDestroy(): void {
+        this.categoryId = 0;
     }
 
 }

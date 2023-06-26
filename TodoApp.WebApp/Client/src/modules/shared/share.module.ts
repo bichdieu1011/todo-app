@@ -12,7 +12,9 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { DateDisplayPipe } from "./pipe/date.pipe";
 import { NgxSpinnerService } from "ngx-spinner";
-import { MySpinnerService } from "./services/spinner.service";
+import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
     imports: [
@@ -21,19 +23,23 @@ import { MySpinnerService } from "./services/spinner.service";
         MatPaginatorModule,
         MatTableModule,
         MatSortModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatDialogModule,
+        MatButtonModule
     ],
     declarations: [
         HeaderComponent, 
         FooterComponent,
         NotificationPopupComponent,
         TaskWidgetComponent,
-        DateDisplayPipe
+        DateDisplayPipe,
+        ConfirmationDialogComponent
     ],
     exports: [
         HeaderComponent, 
         FooterComponent,
         NotificationPopupComponent,
+        ConfirmationDialogComponent,
         TaskWidgetComponent,
         RouterModule,
         CommonModule ,

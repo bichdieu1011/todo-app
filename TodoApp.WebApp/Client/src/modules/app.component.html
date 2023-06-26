@@ -1,9 +1,12 @@
 <div class="home-page">
     <todo-header></todo-header>
     <div class="row app-container">
-        <todo-category class="col col-md-2" (clickViewItem)="actionItem.onViewListActionItem($event)"></todo-category>
-        <todo-actionItem class="col col-md-9" #actionItem></todo-actionItem>
+        <todo-category class="col col-md-2" 
+            (clickViewItem)="actionItem.onViewListActionItem($event)" ></todo-category>
+
+        <todo-actionItem class="col col-md-9" #actionItem ></todo-actionItem>
     </div>
 </div>
 <todo-footer></todo-footer>
 <a  href="#" *ngIf="isUserLogin" (click)="logout()">Logout</a>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
