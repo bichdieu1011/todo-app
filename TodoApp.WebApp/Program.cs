@@ -26,10 +26,8 @@ static IWebHost BuildWebHost(string[] args)
                var configuration = config.Build();
                if (builderContext.HostingEnvironment.IsProduction())
                {
-                   
-                   Console.WriteLine($"{configuration["Secret:TenantId"]}, {configuration["Secret:ClientId"]}, {configuration["Secret:ClientSecret"]}");
-                   var credential = new ClientSecretCredential(configuration["Secret:TenantId"], configuration["Secret:ClientId"], configuration["Secret:ClientSecret"]);
-                   config.AddAzureKeyVault(new Uri($"https://{configuration["Secret:KeyVaultName"]}.vault.azure.net/"), credential);
+                   var credential = new ClientSecretCredential(configuration["AzureAd:TenantId"], configuration["AzureAd:ClientId"], configuration["AzureAd:ClientSecret"]);
+                   config.AddAzureKeyVault(new Uri($"https://{configuration["AzureAd:KeyVaultName"]}.vault.azure.net/"), credential);
                }
            })
             .UseStartup<Startup>()
