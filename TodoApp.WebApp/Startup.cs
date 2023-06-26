@@ -39,16 +39,15 @@ namespace TodoApp.WebApp
                 options.AddPolicy("AllowAngularOrigins",
                     b =>
                     {
-                        b.WithOrigins(Configuration["AllowAngularOrigins"])
+                        b.WithOrigins(Configuration["AppSettings:AllowAngularOrigins"])
                                     .AllowAnyHeader()
                                     .AllowAnyMethod()
-                                    .AllowAnyOrigin()
-                                    .AllowCredentials();
+                                    .AllowAnyOrigin();
                     });
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration);
+                .AddMicrosoftIdentityWebApi(Configuration, "AppSettings:AzureAd");
 
             services.AddControllers();
 

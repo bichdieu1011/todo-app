@@ -9,7 +9,7 @@ namespace TodoApp.WebApp.Controllers
     [Route("category")]
     [ApiController]
     [Authorize]
-    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:scopes")]
+    [RequiredScope(RequiredScopesConfigurationKey = "AppSettings:AzureAd:scopes")]
     public class CategoryController : Controller
     {
         private readonly ILogger<CategoryController> logger;
