@@ -5,6 +5,7 @@ using TodoApp.Database;
 using TodoApp.Database.Entities;
 using TodoApp.Services.CategoryService.Model;
 using TodoApp.Services.Models;
+using TodoApp.Services.UserService.Service;
 using static TodoApp.Services.Constant;
 
 namespace TodoApp.Services.CategoryService.Service
@@ -14,15 +15,17 @@ namespace TodoApp.Services.CategoryService.Service
         private readonly ToDoAppContext dbContext;
         private readonly ILogger<CategoryService> logger;
         private readonly IMapper mapper;
+        private readonly IUserService userService;
 
-        public CategoryService(ToDoAppContext dbContext, ILogger<CategoryService> logger, IMapper mapper)
+        public CategoryService(ToDoAppContext dbContext, ILogger<CategoryService> logger, IMapper mapper, IUserService userService)
         {
             this.dbContext = dbContext;
             this.logger = logger;
             this.mapper = mapper;
+            this.userService = userService;
         }
 
-        public async Task<ActionResult> Add(CategoryModel record)
+        public async Task<ActionResult> Add(CategoryModel record, string email)
         {
             if (record is null)
             {
@@ -32,6 +35,15 @@ namespace TodoApp.Services.CategoryService.Service
                     Messages = new List<string>() { "Record is not exists!" }
                 };
             }
+
+            if (string.IsNullOrWhiteSpace(record.Name))
+                return new ActionResult
+                {
+                    Result = Result.Error,
+                    Messages = new List<string>() { "Name is required" }
+                };
+
+            var userId = await userService.GetOrAddUser(email);
 
             var checkDuplicated = dbContext.Set<Category>()
                 .Where(s => s.Name == record.Name && s.IsActive)
@@ -46,6 +58,7 @@ namespace TodoApp.Services.CategoryService.Service
             }
 
             var newItem = mapper.Map<Category>(record);
+            newItem.UserId = userId;
             dbContext.Set<Category>().Add(newItem);
             await dbContext.SaveChangesAsync();
 
@@ -55,9 +68,12 @@ namespace TodoApp.Services.CategoryService.Service
             };
         }
 
-        public async Task<ActionResult> Deactivate(int id)
+        public async Task<ActionResult> Deactivate(int id, string email)
         {
-            var category = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == id);
+            var userId = await userService.GetUserIdByEmail(email);
+            if (userId == 0) throw new Exception($"{nameof(User)} is not found");
+
+            var category = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
             if (category is null)
             {
                 throw new Exception($"{nameof(Category)} is not found");
@@ -66,7 +82,12 @@ namespace TodoApp.Services.CategoryService.Service
             category.IsActive = false;
             category.Updated = DateTime.Now;
 
-            var items = await dbContext.Set<ActionItem>().Where(s => s.CategoryId == id && s.Status == (short)ActionItemStatus.Open).ToListAsync();
+            var items = await dbContext.Set<ActionItem>()
+                .Where(s => s.CategoryId == id
+                    && s.Status == (short)ActionItemStatus.Open
+                    && s.UserId == userId)
+                .ToListAsync();
+
             foreach (var item in items)
             {
                 item.Status = (short)ActionItemStatus.Removed;
@@ -80,9 +101,12 @@ namespace TodoApp.Services.CategoryService.Service
             };
         }
 
-        public async Task<List<CategoryModel>> GetAll()
+        public async Task<List<CategoryModel>> GetAll(string email)
         {
-            var categories = await dbContext.Set<Category>().Where(c => c.IsActive).ToListAsync();
+            var userId = await userService.GetUserIdByEmail(email);
+            if (userId == 0) return new List<CategoryModel>();
+
+            var categories = await dbContext.Set<Category>().Where(c => c.IsActive && c.UserId == userId).ToListAsync();
             return categories.Select(s => mapper.Map<CategoryModel>(s)).ToList();
         }
     }

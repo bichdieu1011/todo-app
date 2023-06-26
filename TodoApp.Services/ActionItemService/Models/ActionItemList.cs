@@ -2,7 +2,7 @@
 {
     public class ActionItemList
     {
-        public List<ActionItemModel> Result { get; set; }
+        public List<ActionItemModel> Result { get; set; } = new List<ActionItemModel>();
         public int Total { get; set; }
     }
 }

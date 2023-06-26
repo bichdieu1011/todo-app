@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mBTdZUUDXLkWBlj+vdzDULN/For6oDdiQOIjSKrOEYLzNw9mGV53hsf4xLM3sKKxzUQQQviUCmYgqJ4LSu06EQ==",
+  "dgSpecHash": "9kpxYlQTP1YEiOmO+yzgslNOuJGZdq1dNDmd87zMo8q3djBknNY4WPV6pcG0vZ7P00wtFuZQ4rfDx1/A3f7Oyg==",
   "success": true,
   "projectFilePath": "D:\\Learning\\Proj\\ToDoListWebsite\\TodoApp\\TodoApp.WebApp\\TodoApp.WebApp.csproj",
   "expectedPackageFiles": [
@@ -72,6 +72,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\mysql.data\\8.0.33\\mysql.data.8.0.33.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mysql.entityframeworkcore\\6.0.13\\mysql.entityframeworkcore.6.0.13.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\netcore.autoregisterdi\\2.1.0\\netcore.autoregisterdi.2.1.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",

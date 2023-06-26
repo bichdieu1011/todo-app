@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TodoApp.Database\TodoApp.Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UserService\Model\" />
+  </ItemGroup>
+
 </Project>

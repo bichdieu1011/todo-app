@@ -17,6 +17,8 @@ namespace TodoApp.Database.EntityConfigurations
             builder.Property(s => s.Content).IsRequired().HasMaxLength(500);
 
             builder.HasOne(s => s.Category).WithMany().HasForeignKey(s => s.CategoryId);
+            builder.HasOne(s => s.User).WithMany().HasForeignKey(s => s.UserId);
+
         }
     }
 }

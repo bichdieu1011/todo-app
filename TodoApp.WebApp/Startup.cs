@@ -4,6 +4,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using TodoApp.Database;
 using TodoApp.Services;
+using TodoApp.WebApp.Middleware;
 
 namespace TodoApp.WebApp
 {
@@ -20,6 +21,7 @@ namespace TodoApp.WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
             services.AddDbContext<ToDoAppContext>((s, o) =>
             {
                 //var logger = s.GetRequiredService<ILogger<Startup>>();
@@ -69,13 +71,14 @@ namespace TodoApp.WebApp
             if (env.IsDevelopment())
             {
             }
-
+            
             app.UseHttpsRedirection();
             app.UseCors("AllowAngularOrigins");
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            //app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

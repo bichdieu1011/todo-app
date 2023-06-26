@@ -5,10 +5,10 @@ namespace TodoApp.Services.CategoryService.Service
 {
     public interface ICategoryService
     {
-        Task<ActionResult> Add(CategoryModel record);
+        Task<ActionResult> Add(CategoryModel record, string email);
 
-        Task<ActionResult> Deactivate(int id);
+        Task<ActionResult> Deactivate(int id, string email);
 
-        Task<List<CategoryModel>> GetAll();
+        Task<List<CategoryModel>> GetAll(string email);
     }
 }
