@@ -23,7 +23,7 @@ stages:
   - stage: Buid
     jobs:
       - job: Install_and_validate_terraform
-        displayName: Install and validate terraform
+        displayName: Install, validate and publish terraform script
         condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
         steps:
         - checkout: self
@@ -46,22 +46,21 @@ stages:
             provider: 'azurerm'
             command: 'validate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
-
-  - stage: Push_To_Artifact
-    dependsOn: Buid
-    condition: succeeded()
-    jobs:
-        - job: archive_and_publish_to_artifact
-          displayName: Archive And Publish To Artifact
-          steps:
-            - task: ArchiveFiles@2
-              inputs:
-                rootFolderOrFile: '$(System.DefaultWorkingDirectory)/Terraform'
-                includeRootFolder: true
-                archiveType: 'zip'
-                archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-                replaceExistingArchive: true
-            - task: PublishPipelineArtifact@1
-              inputs:
-                targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-                publishLocation: 'pipeline'
+            
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+        
+        - task: ArchiveFiles@2
+          inputs:
+            rootFolderOrFile: '$(System.DefaultWorkingDirectory)/Terraform'
+            includeRootFolder: true
+            archiveType: 'zip'
+            archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+            replaceExistingArchive: true
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+            publishLocation: 'pipeline'
