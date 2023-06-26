@@ -52,6 +52,11 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
+            backendAzureRmResourceGroupName: 'demoapp-terraform'
+            backendAzureRmStorageAccountName: 'demoappterraform'
+            backendAzureRmContainerName: 'tfcontainer'
+            backendAzureRmKey: 'terraform.tfstate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
         
         - task: ArchiveFiles@2
           inputs:
