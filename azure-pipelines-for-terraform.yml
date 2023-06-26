@@ -46,11 +46,12 @@ stages:
             provider: 'azurerm'
             command: 'validate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
-            
+
         - task: TerraformTaskV4@4
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            commandOptions: '-var-file="environment/stage.tfvars"'
             environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
             backendAzureRmResourceGroupName: 'demoapp-terraform'
             backendAzureRmStorageAccountName: 'demoappterraform'
