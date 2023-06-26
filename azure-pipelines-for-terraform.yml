@@ -34,7 +34,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            backendServiceArm: 'Azure subscription 1(1)(07a7605b-7bbb-42c8-af6d-462e6c8c5e39)'
+            backendServiceArm: '$(BACKEND_SERVICE_ARM)'
             backendAzureRmResourceGroupName: 'demoapp-terraform'
             backendAzureRmStorageAccountName: 'demoappterraform'
             backendAzureRmContainerName: 'tfcontainer'
@@ -51,6 +51,11 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
+            backendAzureRmResourceGroupName: 'demoapp-terraform'
+            backendAzureRmStorageAccountName: 'demoappterraform'
+            backendAzureRmContainerName: 'tfcontainer'
+            backendAzureRmKey: 'terraform.tfstate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
         
         - task: ArchiveFiles@2
