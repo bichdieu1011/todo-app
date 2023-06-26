@@ -4,6 +4,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using TodoApp.Database;
 using TodoApp.Services;
+using TodoApp.WebApp.Identity;
 using TodoApp.WebApp.Middleware;
 
 namespace TodoApp.WebApp
@@ -35,6 +36,9 @@ namespace TodoApp.WebApp
                     sqlServerOptionsAction:
                         o => o.MigrationsAssembly(typeof(ToDoAppContext).Assembly.ToString()));
             });
+            services.AddTransient<ExceptionMiddleware>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
             services.ConfigureService(Configuration);
 
             services.AddCors(options =>
@@ -71,14 +75,14 @@ namespace TodoApp.WebApp
             if (env.IsDevelopment())
             {
             }
-            
+
             app.UseHttpsRedirection();
             app.UseCors("AllowAngularOrigins");
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

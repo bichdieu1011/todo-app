@@ -6,7 +6,7 @@ namespace TodoApp.WebApp.Identity
     public class IdentityService : IIdentityService
     {
         private IHttpContextAccessor _context;
-
+        const string _emailClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
         public IdentityService(IHttpContextAccessor context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -14,11 +14,14 @@ namespace TodoApp.WebApp.Identity
 
         public async Task<string> GetUserIdentityEmail()
         {
-            if (_context.HttpContext.User.Identity.IsAuthenticated)
+            if (_context.HttpContext != null && 
+                _context.HttpContext.User != null && 
+                _context.HttpContext.User.Identity != null && 
+                _context.HttpContext.User.Identity.IsAuthenticated)
             {
-                var authenticate = await _context.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
-                return authenticate.Principal?.Claims.FirstOrDefault(s => s.Type == "Ultil.ClaimEmail")?.Value;
+                return _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _emailClaim)?.Value;
             }
+
             return string.Empty;
         }
 
