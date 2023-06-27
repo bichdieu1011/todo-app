@@ -54,10 +54,10 @@ locals {
     source      = var.app_source
   }
 
-  app_settings = {    
+  app_settings = {
     "AzureAd__TenantId"     = var.tenant_id
-    "AzureAd__scopes"     = "api.scope"
-    "AzureAd__ClientId" = var.client_id
+    "AzureAd__scopes"       = "api.scope"
+    "AzureAd__ClientId"     = var.client_id
     "AzureAd__ClientSecret" = var.client_secret
     "AzureAd__KeyVaultName" = var.keyvault_name
 
@@ -71,10 +71,20 @@ resource "azurerm_windows_web_app" "demoapp_api" {
   resource_group_name = var.resource_group
   service_plan_id     = azurerm_service_plan.demoapp_api_service_plan.id
   tags                = local.tags
-  
-  https_only          = false
+
+  https_only = false
   site_config {
     always_on = false
+  }
+
+  logs {
+    failed_request_tracing  = true
+    detailed_error_messages = true
+
+    application_logs {
+      file_system_level = Info
+    }
+
   }
 
   app_settings = local.app_settings
