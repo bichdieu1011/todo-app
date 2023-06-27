@@ -32,7 +32,7 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public void TestTomorrow()
         {
-            var today = new DateTime(2023, 01, 01);
+            var today = DateTime.Now;
             var res = today.Tomorow();
             Assert.Equal(today.Day + 1, res.Start.Day);
             Assert.Equal(today.Day + 1, res.End.Day);

@@ -28,7 +28,7 @@
         {
             DateRange range = new DateRange();
 
-            range.Start = date.AddDays(1);
+            range.Start = date.Date.AddDays(1);
             range.End = range.Start.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             return range;
