@@ -49,7 +49,7 @@ module "app_db" {
 
 module "app_register" {
   source          = "./modules/application-register"
-  aapi_expose_url = "api://ar-interview-us-demoapp-1"
+  api_expose_url = "api://ar-interview-us-demoapp-1"
   depends_on      = [module.resource-group]
 }
 
