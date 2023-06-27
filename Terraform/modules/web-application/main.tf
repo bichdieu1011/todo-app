@@ -27,7 +27,7 @@ resource "azuread_application" "demo_application_registry_for_client" {
   }
 
   single_page_application {
-    redirect_uris = ["http://locahost:4200/", "https://${azurerm_static_site.demoapp_client.default_host_name}/"]
+    redirect_uris = ["http://localhost:4200/", "https://${azurerm_static_site.demoapp_client.default_host_name}/"]
   }
 
   web {
@@ -82,7 +82,7 @@ resource "azurerm_windows_web_app" "demoapp_api" {
     detailed_error_messages = true
 
     application_logs {
-      file_system_level = Info
+      file_system_level = "Info"
     }
 
   }
