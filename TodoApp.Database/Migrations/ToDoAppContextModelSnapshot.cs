@@ -106,7 +106,6 @@ namespace TodoApp.Database.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -122,7 +121,8 @@ namespace TodoApp.Database.Migrations
 
                     b.HasIndex("Email");
 
-                    b.HasIndex("IdentifierId");
+                    b.HasIndex("IdentifierId")
+                        .IsUnique();
 
                     b.ToTable("User", (string)null);
                 });

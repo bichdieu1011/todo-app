@@ -24,9 +24,9 @@ namespace TodoApp.Services.UserService.Service
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
-            if (string.IsNullOrWhiteSpace(user.Email)) throw new ArgumentNullException(nameof(user.Email));
+            if (string.IsNullOrWhiteSpace(user.IdentifierObjectId)) throw new ArgumentNullException(nameof(user.IdentifierObjectId));
 
-            var checkExists = await appContext.Set<User>().FirstOrDefaultAsync(s => s.Email == user.Email);
+            var checkExists = await appContext.Set<User>().FirstOrDefaultAsync(s => s.IdentifierId == user.IdentifierObjectId);
             if (checkExists != null)
                 return checkExists;
 
