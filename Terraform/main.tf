@@ -60,7 +60,7 @@ module "app_key_vault"{
   department      = var.department
   app_source      = var.app_source
   azure_devops_project_id = var.azure_devops_project_id
-  application_object_id = module.app_register.application_object_id
+  application_object_id = module.app_register.client_id
   depends_on      = [module.resource-group, module.app_register]
 }
 
