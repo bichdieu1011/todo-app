@@ -11,3 +11,7 @@ output "client_secret" {
 output "application_object_id" {
   value = azuread_application.demo_application_registry.object_id
 }
+
+output "application_principle_id" {
+  value = azuread_service_principal.demo_app_service_principal.object_id
+}

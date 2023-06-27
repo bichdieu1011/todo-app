@@ -21,19 +21,19 @@ resource "azuread_application" "demo_application_registry" {
     mapped_claims_enabled = true
 
     oauth2_permission_scope {
-    admin_consent_description  = "Allow the application to access example on behalf of the signed-in user."
-    admin_consent_display_name = "Access API"
-    user_consent_description   = "Allow the application to access example on behalf of the signed-in user."
-    user_consent_display_name  = "Access API"
-    enabled                    = true
-    type                       = "User"
-    value                      = "api.scope"
-    id                         = random_uuid.demo_application_scope_id.result
-  }
+      admin_consent_description  = "Allow the application to access example on behalf of the signed-in user."
+      admin_consent_display_name = "Access API"
+      user_consent_description   = "Allow the application to access example on behalf of the signed-in user."
+      user_consent_display_name  = "Access API"
+      enabled                    = true
+      type                       = "User"
+      value                      = "api.scope"
+      id                         = random_uuid.demo_application_scope_id.result
+    }
   }
 
-  
 }
+
 
 resource "azuread_service_principal" "demo_app_service_principal" {
   application_id = azuread_application.demo_application_registry.application_id
