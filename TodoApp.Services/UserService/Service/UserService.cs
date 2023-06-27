@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using TodoApp.Database;
 using TodoApp.Database.Entities;
+using TodoApp.Services.Models;
 
 namespace TodoApp.Services.UserService.Service
 {
@@ -19,7 +20,7 @@ namespace TodoApp.Services.UserService.Service
             this.appContext = appContext;
         }
 
-        public async Task<User> AddUser(User user)
+        public async Task<User> AddUser(UserProfile user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
@@ -32,6 +33,7 @@ namespace TodoApp.Services.UserService.Service
             var newUser = new User
             {
                 Email = user.Email,
+                IdentifierId = user.IdentifierObjectId,
                 JoinedDate = DateTime.Now
             };
             await appContext.Set<User>().AddAsync(newUser);
@@ -39,33 +41,34 @@ namespace TodoApp.Services.UserService.Service
             return newUser;
         }
 
-        public async Task<int> GetOrAddUser(string email)
+        public async Task<int> GetOrAddUser(UserProfile user)
         {
-            var cacheKey = $"_useremail:{email.ToLower()}";
+            var cacheKey = $"_userObjectId:{user.IdentifierObjectId.ToLower()}";
             if (!memoryCache.TryGetValue(cacheKey, out int userId))
             {
-                var user = await appContext.Set<User>().FirstOrDefaultAsync(s => s.Email == email);
-                if (user == null)
+                var userDetails = await appContext.Set<User>().FirstOrDefaultAsync(s => s.IdentifierId == user.IdentifierObjectId);
+                if (userDetails == null)
                 {
-                    user = await AddUser(new User { Email = email });
+                    userDetails = await AddUser(user);
                 }
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(10))
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
-                userId = user.Id;
+                userId = userDetails.Id;
                 memoryCache.Set(cacheKey, userId, cacheEntryOptions);
             }
 
             return userId;
         }
 
-        public async Task<int> GetUserIdByEmail(string email)
+        public async Task<int> GetUserId(UserProfile userProfile)
         {
-            var cacheKey = $"_useremail:{email.ToLower()}";
+            var cacheKey = $"_userObjectId:{userProfile.IdentifierObjectId.ToLower()}";
             if (!memoryCache.TryGetValue(cacheKey, out int userId))
             {
-                var user = await appContext.Set<User>().FirstOrDefaultAsync(s => s.Email == email);
+                var user = await appContext.Set<User>()
+                    .FirstOrDefaultAsync(s => s.IdentifierId == userProfile.IdentifierObjectId);
                 if (user == null)
                     return 0;
 

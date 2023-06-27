@@ -2,8 +2,8 @@
 {
     public interface IIdentityService
     {
-        Task<string> GetUserIdentityEmail();
+        int UserId { get; }
 
-        string GetUserName();
+        Task<int> GetUserId();
     }
 }

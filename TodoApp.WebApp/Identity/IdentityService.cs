@@ -1,33 +1,56 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.Extensions.Caching.Memory;
+using TodoApp.Services.Models;
+using TodoApp.Services.UserService.Service;
 
 namespace TodoApp.WebApp.Identity
 {
     public class IdentityService : IIdentityService
     {
         private IHttpContextAccessor _context;
-        const string _emailClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
-        public IdentityService(IHttpContextAccessor context)
+        private readonly IMemoryCache _cache;
+        private readonly IUserService userService;
+        private const string _emailClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+        private const string _objectIdentifierClaim = "http://schemas.microsoft.com/identity/claims/objectidentifier";
+
+        public IdentityService(IHttpContextAccessor context, IMemoryCache cache, IUserService userService)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            this._cache = cache;
+            this.userService = userService;
         }
 
-        public async Task<string> GetUserIdentityEmail()
+        public int UserId
         {
-            if (_context.HttpContext != null && 
-                _context.HttpContext.User != null && 
-                _context.HttpContext.User.Identity != null && 
+            get
+            {
+                var profile = Task.FromResult(GetUserId()).Result;
+                return profile != null ? profile.Id : 0;
+            }
+        }
+
+        public async Task<int> GetUserId()
+        {
+            if (_context.HttpContext != null &&
+                _context.HttpContext.User != null &&
+                _context.HttpContext.User.Identity != null &&
                 _context.HttpContext.User.Identity.IsAuthenticated)
             {
-                return _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _emailClaim)?.Value;
+                var email = _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _emailClaim)?.Value;
+                var identifierObjectId = _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _objectIdentifierClaim)?.Value;
+
+                if (_cache.TryGetValue(identifierObjectId, out UserProfile userProfile))
+                {
+                    return userProfile.Id;
+                }
+
+                return await userService.GetOrAddUser(new UserProfile
+                {
+                    IdentifierObjectId = identifierObjectId,
+                    Email = email
+                });
             }
 
-            return string.Empty;
-        }
-
-        public string GetUserName()
-        {
-            return _context.HttpContext.User.Identity.Name;
+            return -1;
         }
     }
 }

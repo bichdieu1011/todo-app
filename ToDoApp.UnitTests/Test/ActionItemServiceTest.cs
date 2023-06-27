@@ -7,7 +7,6 @@ using TodoApp.Database.Entities;
 using TodoApp.Services.ActionItemService;
 using TodoApp.Services.ActionItemService.Mapper;
 using TodoApp.Services.ActionItemService.Models;
-using TodoApp.Services.UserService.Service;
 using static TodoApp.Services.Constant;
 
 namespace ToDoApp.UnitTests.Test
@@ -25,29 +24,25 @@ namespace ToDoApp.UnitTests.Test
 
             var logger = new Mock<ILogger<ActionItemService>>();
 
-            var userService = new Mock<IUserService>();
-            userService.Setup(s => s.GetUserIdByEmail("email")).ReturnsAsync(1);
-            userService.Setup(s => s.GetOrAddUser("email")).ReturnsAsync(1);
-
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new ActionItemMapper());
             });
             var mapper = mappingConfig.CreateMapper();
-            actionItemService = new ActionItemService(testDbContextMock, logger.Object, mapper, userService.Object);
+            actionItemService = new ActionItemService(testDbContextMock, logger.Object, mapper);
         }
 
         [Fact]
         public async Task GetAllByWidget_ToDay()
         {
-            var result1 = await actionItemService.GetAllByWidget(1, TaskWidgetType.Today, 0, 5, "content", "asc", "email");
+            var result1 = await actionItemService.GetAllByWidget(1, TaskWidgetType.Today, 0, 5, "content", "asc", 1);
             Assert.NotNull(result1);
             Assert.Equal(2, result1.Total);
         }
 
         public async Task UnAuthorisedUser_GetAllByWidget_ToDay()
         {
-            var result1 = await actionItemService.GetAllByWidget(1, TaskWidgetType.Today, 0, 5, "content", "asc", "email2");
+            var result1 = await actionItemService.GetAllByWidget(1, TaskWidgetType.Today, 0, 5, "content", "asc", -1);
             Assert.NotNull(result1);
             Assert.Equal(0, result1.Total);
         }
@@ -55,20 +50,20 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public async Task GetAll()
         {
-            var result1 = await actionItemService.GetAll(1, "email");
+            var result1 = await actionItemService.GetAll(1, 1);
             Assert.NotEmpty(result1);
 
-            var result2 = await actionItemService.GetAll(2, "email");
+            var result2 = await actionItemService.GetAll(2, 1);
             Assert.Empty(result2);
         }
 
         [Fact]
         public async Task UnAuthorisedUser_GetAll()
         {
-            var result1 = await actionItemService.GetAll(1, "email2");
+            var result1 = await actionItemService.GetAll(1, 2);
             Assert.Empty(result1);
 
-            var result2 = await actionItemService.GetAll(2, "email2");
+            var result2 = await actionItemService.GetAll(2, -1);
             Assert.Empty(result2);
         }
 
@@ -83,7 +78,7 @@ namespace ToDoApp.UnitTests.Test
                 End = DateTime.Now.AddDays(1),
                 Status = (short)ActionItemStatus.Open
             };
-            var result = await actionItemService.Add(record, "email");
+            var result = await actionItemService.Add(record, 1);
             Assert.Equal(Result.Success, result.Result);
         }
 
@@ -98,7 +93,7 @@ namespace ToDoApp.UnitTests.Test
                 End = DateTime.Now.AddDays(1),
                 Status = (short)ActionItemStatus.Open
             };
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, "email2"));
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, 2));
         }
 
         [Fact]
@@ -111,7 +106,7 @@ namespace ToDoApp.UnitTests.Test
                 Start = DateTime.Now.AddDays(-5),
                 End = DateTime.Now
             };
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, "email"));
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, 1));
         }
 
         [Fact]
@@ -124,7 +119,7 @@ namespace ToDoApp.UnitTests.Test
                 Start = DateTime.Now.AddDays(-5),
                 End = DateTime.Now
             };
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, "email"));
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Add(record, 1));
         }
 
         [Fact]
@@ -137,7 +132,7 @@ namespace ToDoApp.UnitTests.Test
                 NewStatus = ActionItemStatus.Done
             };
 
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Edit(record, "email1"));
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Edit(record, 2));
         }
 
         [Fact]
@@ -150,7 +145,7 @@ namespace ToDoApp.UnitTests.Test
                 NewStatus = ActionItemStatus.Done
             };
 
-            var res = await actionItemService.Edit(record, "email");
+            var res = await actionItemService.Edit(record, 1);
             Assert.Equal(Result.Success, res.Result);
         }
 
@@ -163,7 +158,7 @@ namespace ToDoApp.UnitTests.Test
                 CurrentStatus = ActionItemStatus.Open,
                 NewStatus = ActionItemStatus.Done
             };
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Edit(record, "email"));
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Edit(record, 1));
         }
 
         [Fact]
@@ -176,7 +171,7 @@ namespace ToDoApp.UnitTests.Test
                 NewStatus = ActionItemStatus.Open
             };
 
-            var res = await actionItemService.Edit(record, "email");
+            var res = await actionItemService.Edit(record, 1);
             Assert.Equal(Result.Warning, res.Result);
         }
 
@@ -190,27 +185,35 @@ namespace ToDoApp.UnitTests.Test
                 NewStatus = ActionItemStatus.Removed
             };
 
-            var res = await actionItemService.Edit(record, "email");
+            var res = await actionItemService.Edit(record, 1);
             Assert.Equal(Result.Error, res.Result);
         }
 
         [Fact]
         public async Task Delete_ActionItem()
         {
-            var res = await actionItemService.Delete(1, "email");
+            var res = await actionItemService.Delete(1, 1);
             Assert.Equal(Result.Success, res.Result);
         }
 
         [Fact]
+        public async Task InvalidUser_Delete_ActionItem()
+        {
+            await Assert.ThrowsAsync<Exception>(() => actionItemService.Delete(1, -1));
+        }
+
+
+        [Fact]
         public async Task UnAuthorisedUser_Delete_ActionItem()
         {
-            await Assert.ThrowsAsync<Exception>(() => actionItemService.Delete(1, "email1"));
+            var res = await actionItemService.Delete(1, 2);
+            Assert.Equal(Result.Error, res.Result);
         }
 
         [Fact]
         public async Task Delete_No_Exists_ActionItem()
         {
-            var res = await actionItemService.Delete(0, "email");
+            var res = await actionItemService.Delete(0, 1);
             Assert.Equal(Result.Error, res.Result);
         }
 
@@ -245,7 +248,7 @@ namespace ToDoApp.UnitTests.Test
 
             testDbContextMock.Set<User>().AddRange(new User[]
             {
-                new User { Id = 1, Email = "email"}
+                new User { Id = 1, Email = "email", IdentifierId="id1"}
             });
 
             testDbContextMock.SaveChanges();

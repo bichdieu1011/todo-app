@@ -15,17 +15,15 @@ namespace TodoApp.Services.CategoryService.Service
         private readonly ToDoAppContext dbContext;
         private readonly ILogger<CategoryService> logger;
         private readonly IMapper mapper;
-        private readonly IUserService userService;
 
-        public CategoryService(ToDoAppContext dbContext, ILogger<CategoryService> logger, IMapper mapper, IUserService userService)
+        public CategoryService(ToDoAppContext dbContext, ILogger<CategoryService> logger, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.logger = logger;
             this.mapper = mapper;
-            this.userService = userService;
         }
 
-        public async Task<ActionResult> Add(CategoryModel record, string email)
+        public async Task<ActionResult> Add(CategoryModel record, int userId)
         {
             if (record is null)
             {
@@ -43,7 +41,7 @@ namespace TodoApp.Services.CategoryService.Service
                     Messages = new List<string>() { "Name is required" }
                 };
 
-            var userId = await userService.GetOrAddUser(email);
+            if (userId <= 0) throw new Exception("User is invalid");
 
             var checkDuplicated = dbContext.Set<Category>()
                 .Where(s => s.Name == record.Name && s.IsActive)
@@ -68,10 +66,9 @@ namespace TodoApp.Services.CategoryService.Service
             };
         }
 
-        public async Task<ActionResult> Deactivate(int id, string email)
+        public async Task<ActionResult> Deactivate(int id, int userId)
         {
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) throw new Exception($"{nameof(User)} is not found");
+            if (userId <= 0) throw new Exception($"{nameof(User)} is not found");
 
             var category = await dbContext.Set<Category>().SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
             if (category is null)
@@ -101,10 +98,9 @@ namespace TodoApp.Services.CategoryService.Service
             };
         }
 
-        public async Task<List<CategoryModel>> GetAll(string email)
+        public async Task<List<CategoryModel>> GetAll(int userId)
         {
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) return new List<CategoryModel>();
+            if (userId <= 0) return new List<CategoryModel>();
 
             var categories = await dbContext.Set<Category>().Where(c => c.IsActive && c.UserId == userId).ToListAsync();
             return categories.Select(s => mapper.Map<CategoryModel>(s)).ToList();

@@ -6,14 +6,14 @@ namespace TodoApp.Services.ActionItemService
 {
     public interface IActionItemServices
     {
-        Task<ActionResult> Add(ActionItemModel record, string email);
+        Task<ActionResult> Add(ActionItemModel record, int userId);
 
-        Task<ActionResult> Edit(UpdateActionItemStatus record, string email);
+        Task<ActionResult> Edit(UpdateActionItemStatus record, int userId);
 
-        Task<ActionResult> Delete(long recordId, string email);
+        Task<ActionResult> Delete(long recordId, int userId);
 
-        Task<List<ActionItemModel>> GetAll(int categoryId, string email);
+        Task<List<ActionItemModel>> GetAll(int categoryId, int userId);
 
-        Task<ActionItemList> GetAllByWidget(int categoryId, TaskWidgetType type, int skip, int take, string sortBy, string sortDirection, string email);
+        Task<ActionItemList> GetAllByWidget(int categoryId, TaskWidgetType type, int skip, int take, string sortBy, string sortDirection, int userId);
     }
 }

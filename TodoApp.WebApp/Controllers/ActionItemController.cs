@@ -16,14 +16,14 @@ namespace TodoApp.WebApp.Controllers
     {
         private readonly ILogger<ActionItemController> logger;
         private readonly IActionItemServices service;
-        private readonly string _email;
+        private readonly IIdentityService identityService;
 
         public ActionItemController(ILogger<ActionItemController> logger,
             IActionItemServices service, IIdentityService identityService)
         {
             this.logger = logger;
             this.service = service;
-            _email = identityService.GetUserIdentityEmail().Result;
+            this.identityService = identityService;
         }
 
         [Route("widget")]
@@ -31,7 +31,7 @@ namespace TodoApp.WebApp.Controllers
         public async Task<ActionResult> GetAllActionItemByWidgetAsync(int categoryId,
             TaskWidgetType type, int skip, int take, string? sortBy, string? sortdirection)
         {
-            var result = await service.GetAllByWidget(categoryId, type, skip, take, sortBy, sortdirection, _email);
+            var result = await service.GetAllByWidget(categoryId, type, skip, take, sortBy, sortdirection, identityService.UserId);
             return Ok(result);
         }
 
@@ -39,7 +39,7 @@ namespace TodoApp.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> AddActionItemAsync([FromBody] ActionItemModel model)
         {
-            var result = await service.Add(model, _email);
+            var result = await service.Add(model, identityService.UserId);
             return Ok(result);
         }
 
@@ -48,7 +48,7 @@ namespace TodoApp.WebApp.Controllers
         public async Task<ActionResult> UpdateActionItemStatusAsync(long id, [FromBody] UpdateActionItemStatus model)
         {
             model.Id = id;
-            var result = await service.Edit(model, _email);
+            var result = await service.Edit(model, identityService.UserId);
             return Ok(result);
         }
 
@@ -56,7 +56,7 @@ namespace TodoApp.WebApp.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteActionItemAsync(long id)
         {
-            var result = await service.Delete(id, _email);
+            var result = await service.Delete(id, identityService.UserId);
             return Ok(result);
         }
     }

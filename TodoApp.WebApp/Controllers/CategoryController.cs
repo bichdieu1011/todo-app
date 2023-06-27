@@ -4,6 +4,7 @@ using Microsoft.Identity.Web.Resource;
 using TodoApp.Services.CategoryService.Model;
 using TodoApp.Services.CategoryService.Service;
 using TodoApp.WebApp.Identity;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 
 namespace TodoApp.WebApp.Controllers
 {
@@ -15,21 +16,22 @@ namespace TodoApp.WebApp.Controllers
     {
         private readonly ILogger<CategoryController> logger;
         private readonly ICategoryService service;
-        readonly string _email;
+        private readonly IIdentityService identityService;
+
         public CategoryController(ILogger<CategoryController> logger,
             ICategoryService service,
             IIdentityService identityService)
         {
             this.logger = logger;
             this.service = service;
-            _email = identityService.GetUserIdentityEmail().Result;
+            this.identityService = identityService;
         }
 
         [Route("all")]
         [HttpGet]
         public async Task<ActionResult> GetAllCategoryAsync()
         {
-            var result = await service.GetAll(_email);
+            var result = await service.GetAll(identityService.UserId);
             return Ok(result);
         }
 
@@ -37,7 +39,7 @@ namespace TodoApp.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> AddCategoryAsync([FromBody] CategoryModel model)
         {
-            var result = await service.Add(model, _email);
+            var result = await service.Add(model, identityService.UserId);
             return Ok(result);
         }
 
@@ -45,7 +47,7 @@ namespace TodoApp.WebApp.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeactivateCategoryAsync(int id)
         {
-            var result = await service.Deactivate(id, _email);
+            var result = await service.Deactivate(id, identityService.UserId);
             return Ok(result);
         }
     }

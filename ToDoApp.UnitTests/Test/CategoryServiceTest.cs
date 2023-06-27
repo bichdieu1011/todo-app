@@ -24,29 +24,26 @@ namespace ToDoApp.UnitTests.Test
             InitData();
 
             var logger = new Mock<ILogger<CategoryService>>();
-            var userService = new Mock<IUserService>();
-            userService.Setup(s => s.GetUserIdByEmail("email")).ReturnsAsync(1);
-            userService.Setup(s => s.GetOrAddUser("email")).ReturnsAsync(1);
-
+            
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new CategoryMapper());
             });
             var mapper = mappingConfig.CreateMapper();
-            categoryService = new CategoryService(testDbContextMock, logger.Object, mapper, userService.Object);
+            categoryService = new CategoryService(testDbContextMock, logger.Object, mapper);
         }
 
         [Fact]
         public async Task Get()
         {
-            var result = await categoryService.GetAll("email");
+            var result = await categoryService.GetAll(1);
             Assert.Contains(result, s => s.Name == "category 1");
         }
 
         [Fact]
         public async Task UnauthorisedUser_Get()
         {
-            var result = await categoryService.GetAll("email2");
+            var result = await categoryService.GetAll(2);
             Assert.Empty(result);
         }
 
@@ -54,23 +51,22 @@ namespace ToDoApp.UnitTests.Test
         public async Task Add_Category_Success()
         {
             var record = new CategoryModel { Name = "category test" };
-            var result = await categoryService.Add(record, "email");
+            var result = await categoryService.Add(record, 1);
             Assert.Equal(Result.Success, result.Result);
         }
 
         [Fact]
-        public async Task NewUser_Add_Category()
+        public async Task InvalidUser_Add_Category()
         {
             var record = new CategoryModel { Name = "category test" };
-            var res = await categoryService.Add(record, "email3");
-            Assert.Equal(Result.Success, res.Result);
+            await Assert.ThrowsAsync<Exception>(() => categoryService.Add(record, -1));
         }
 
         [Fact]
         public async Task Add_Duplicated_Active_Category_HasError()
         {
             var record = new CategoryModel { Name = "category 1" };
-            var result = await categoryService.Add(record, "email");
+            var result = await categoryService.Add(record,1);
             Assert.Equal(Result.Error, result.Result);
         }
 
@@ -78,14 +74,14 @@ namespace ToDoApp.UnitTests.Test
         public async Task Add_Duplicated_Inactive_Category()
         {
             var record = new CategoryModel { Name = "category 2" };
-            var result = await categoryService.Add(record, "email");
+            var result = await categoryService.Add(record, 1);
             Assert.Equal(Result.Success, result.Result);
         }
 
         [Fact]
         public async Task Get_All_Category()
         {
-            var result = await categoryService.GetAll("email");
+            var result = await categoryService.GetAll(1);
             Assert.Contains(result, s => s.Name == "category 1");
             Assert.Contains(result, item => item.Id == 1);
             Assert.DoesNotContain(result, item => item.Id == 2);
@@ -94,14 +90,14 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public async Task UnauthorisedUser_Get_All_Category()
         {
-            var result = await categoryService.GetAll("email2");
+            var result = await categoryService.GetAll(2);
             Assert.Empty(result);
         }
 
         [Fact]
         public async Task Deactivate_An_Active_Category()
         {
-            var result = await categoryService.Deactivate(3, "email");
+            var result = await categoryService.Deactivate(3, 1);
             Assert.Equal(Result.Success, result.Result);
 
             var category = testDbContextMock.Set<Category>().Include(x => x.ActionItems).SingleOrDefault(s => s.Id == 3);
@@ -113,8 +109,8 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public async Task UnauthorisedUser_Deactivate_An_Category()
         {
-            await Assert.ThrowsAsync<Exception>(() => categoryService.Deactivate(3, "email3"));
-            await Assert.ThrowsAsync<Exception>(() => categoryService.Deactivate(3, "email2"));
+            await Assert.ThrowsAsync<Exception>(() => categoryService.Deactivate(3, -1));
+            await Assert.ThrowsAsync<Exception>(() => categoryService.Deactivate(3, 2));
         }
 
         private void InitData()
@@ -150,8 +146,8 @@ namespace ToDoApp.UnitTests.Test
 
             testDbContextMock.Set<User>().AddRange(new User[]
             {
-                new User { Id = 1, Email = "email"},
-                new User { Id = 2, Email = "email2"}
+                new User { Id = 1, Email = "email",IdentifierId="id1" },
+                new User { Id = 2, Email = "email2",IdentifierId="id2"}
             });
             testDbContextMock.SaveChanges();
         }

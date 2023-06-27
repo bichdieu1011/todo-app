@@ -15,20 +15,17 @@ namespace TodoApp.Services.ActionItemService
         private readonly ToDoAppContext dbContext;
         private readonly ILogger<ActionItemService> logger;
         private readonly IMapper mapper;
-        private readonly IUserService userService;
 
-        public ActionItemService(ToDoAppContext dbContext, 
+        public ActionItemService(ToDoAppContext dbContext,
             ILogger<ActionItemService> logger,
-            IMapper mapper,
-            IUserService userService)
+            IMapper mapper)
         {
             this.dbContext = dbContext;
             this.logger = logger;
             this.mapper = mapper;
-            this.userService = userService;
         }
 
-        public async Task<ActionResult> Add(ActionItemModel record, string email)
+        public async Task<ActionResult> Add(ActionItemModel record, int userId)
         {
             if (record is null)
             {
@@ -47,7 +44,7 @@ namespace TodoApp.Services.ActionItemService
                     Messages = new List<string>() { validate }
                 };
 
-            var userId = await userService.GetOrAddUser(email);
+            if (userId <= 0) throw new Exception("Invalid User");
 
             var category = await dbContext.Set<Category>()
                 .SingleOrDefaultAsync(s => s.Id == record.CategoryId && s.IsActive && s.UserId == userId);
@@ -76,10 +73,9 @@ namespace TodoApp.Services.ActionItemService
             return string.Empty;
         }
 
-        public async Task<ActionResult> Delete(long recordId, string email)
+        public async Task<ActionResult> Delete(long recordId, int userId)
         {
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) throw new Exception($"{nameof(User)} is not found");
+            if (userId <= 0) throw new Exception($"{nameof(User)} is not found");
 
             var record = await dbContext.Set<ActionItem>().SingleOrDefaultAsync(s => s.Id == recordId && s.UserId == userId);
             if (record is null)
@@ -100,12 +96,11 @@ namespace TodoApp.Services.ActionItemService
             };
         }
 
-        public async Task<ActionResult> Edit(UpdateActionItemStatus record, string email)
+        public async Task<ActionResult> Edit(UpdateActionItemStatus record, int userId)
         {
             if (record is null) throw new Exception($"{nameof(record)} is empty");
 
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) throw new Exception($"{nameof(User)} is not found");
+            if (userId <= 0) throw new Exception($"{nameof(User)} is not found");
 
             var item = await dbContext.Set<ActionItem>().SingleOrDefaultAsync(s => s.Id == record.Id && s.UserId == userId);
             if (item is null)
@@ -128,10 +123,9 @@ namespace TodoApp.Services.ActionItemService
             return new ActionResult { Result = Constant.Result.Success };
         }
 
-        public async Task<List<ActionItemModel>> GetAll(int categoryId, string email)
+        public async Task<List<ActionItemModel>> GetAll(int categoryId, int userId)
         {
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) return new List<ActionItemModel>();
+            if (userId <= 0) return new List<ActionItemModel>();
 
             var res = await dbContext.Set<ActionItem>()
                 .Where(s =>
@@ -146,10 +140,13 @@ namespace TodoApp.Services.ActionItemService
             return res.Select(s => mapper.Map<ActionItemModel>(s)).ToList();
         }
 
-        public async Task<ActionItemList> GetAllByWidget(int categoryId, TaskWidgetType type, int skip, int take, string sortBy, string sortdirection, string email)
+        public async Task<ActionItemList> GetAllByWidget(
+            int categoryId, TaskWidgetType type,
+            int skip, int take,
+            string sortBy, string sortdirection,
+            int userId)
         {
-            var userId = await userService.GetUserIdByEmail(email);
-            if (userId == 0) return new ActionItemList();
+            if (userId <= 0) return new ActionItemList();
 
             var now = DateTime.Now;
 
@@ -158,7 +155,7 @@ namespace TodoApp.Services.ActionItemService
             var thisWeek = now.ThisWeek();
 
             IQueryable<ActionItem> queries = dbContext.Set<ActionItem>()
-                .Where(s => s.CategoryId == categoryId 
+                .Where(s => s.CategoryId == categoryId
                         && s.Status != (short)ActionItemStatus.Removed
                         && s.UserId == userId);
 

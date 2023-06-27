@@ -11,8 +11,10 @@ namespace TodoApp.Database.EntityConfigurations
             builder.ToTable(nameof(User));
             builder.HasKey(x => x.Id);
             builder.Property(s => s.Email).IsRequired().HasMaxLength(200);
+            builder.Property(s => s.IdentifierId).IsRequired().HasMaxLength(200);
 
             builder.HasIndex(x => x.Email);
+            builder.HasIndex(x => x.IdentifierId);
 
             builder.HasMany(s => s.ActionItems)
                 .WithOne(s => s.User)

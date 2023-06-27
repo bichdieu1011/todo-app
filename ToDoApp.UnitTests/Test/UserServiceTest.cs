@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using TodoApp.Database;
 using TodoApp.Database.Entities;
+using TodoApp.Services.Models;
 using TodoApp.Services.UserService.Service;
 
 namespace ToDoApp.UnitTests.Test
@@ -29,24 +30,24 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public async Task Get_Existed_User_By_Email()
         {
-            cacheMemory.Setup(s => s.CreateEntry($"_useremail:email")).Returns(Mock.Of<ICacheEntry>().SetValue(1));
+            cacheMemory.Setup(s => s.CreateEntry($"_userObjectId:id1")).Returns(Mock.Of<ICacheEntry>().SetValue(1));
 
-            var userId = await userService.GetUserIdByEmail("email");
+            var userId = await userService.GetUserId(new UserProfile { Email = "email", IdentifierObjectId = "id1" });
             Assert.Equal(1, userId);
         }
 
         [Fact]
         public async Task Get_NoneExisted_User_By_Email()
         {
-            var userId = await userService.GetUserIdByEmail("email1");
+            var userId = await userService.GetUserId(new UserProfile { Email = "email2", IdentifierObjectId = "id2" });
             Assert.Equal(0, userId);
         }
 
         [Fact]
         public async Task GetOrAddExistedUser_Cached()
         {
-            cacheMemory.Setup(s => s.CreateEntry($"_useremail:email")).Returns(Mock.Of<ICacheEntry>().SetValue(1));
-            var userId = await userService.GetOrAddUser("email");
+            cacheMemory.Setup(s => s.CreateEntry($"_userObjectId:id1")).Returns(Mock.Of<ICacheEntry>().SetValue(1));
+            var userId = await userService.GetOrAddUser(new UserProfile { Email = "email", IdentifierObjectId = "id1" });
             Assert.Equal(1, userId);
         }
 
@@ -56,7 +57,7 @@ namespace ToDoApp.UnitTests.Test
             cacheMemory.Setup(s => s.CreateEntry(It.IsAny<object>()))
                 .Returns(Mock.Of<ICacheEntry>);
 
-            var userId = await userService.GetOrAddUser("email");
+            var userId = await userService.GetOrAddUser(new UserProfile { Email = "email", IdentifierObjectId = "id1" });
             Assert.Equal(1, userId);
         }
 
@@ -65,14 +66,14 @@ namespace ToDoApp.UnitTests.Test
         {
             cacheMemory.Setup(s => s.CreateEntry(It.IsAny<object>()))
                .Returns(Mock.Of<ICacheEntry>);
-            var userId = await userService.GetOrAddUser("email2");
+            var userId = await userService.GetOrAddUser(new UserProfile { Email = "email2", IdentifierObjectId = "id2" });
             Assert.Equal(2, userId);
         }
 
         [Fact]
         public async Task AddExisedUser()
         {
-            var user = await userService.AddUser(new User { Email = "email" });
+            var user = await userService.AddUser(new UserProfile { Email = "email", IdentifierObjectId = "id1" });
             Assert.NotNull(user);
             Assert.Equal(1, user.Id);
         }
@@ -80,7 +81,7 @@ namespace ToDoApp.UnitTests.Test
         [Fact]
         public async Task AddNoneExisedUser()
         {
-            var user = await userService.AddUser(new User { Email = "email2" });
+            var user = await userService.AddUser(new UserProfile { Email = "email2", IdentifierObjectId = "id2" });
             Assert.NotNull(user);
             Assert.Equal(2, user.Id);
             Assert.Equal(DateTime.Today, user.JoinedDate.Date);
@@ -90,7 +91,7 @@ namespace ToDoApp.UnitTests.Test
         {
             testDbContextMock.Set<User>().AddRange(new User[]
             {
-                new User { Id = 1, Email = "email", JoinedDate = DateTime.Now}
+                new User { Id = 1, Email = "email", IdentifierId="id1", JoinedDate = DateTime.Now}
             });
             testDbContextMock.SaveChanges();
         }
