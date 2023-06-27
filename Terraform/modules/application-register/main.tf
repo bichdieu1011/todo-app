@@ -4,7 +4,7 @@ resource "azuread_application" "demo_application_registry" {
   display_name     = "ar-interview-us-demoapp-1"
   sign_in_audience = "AzureADMyOrg"
 
-  identifier_uris = ["api://ar-interview-us-demoapp-1"]
+  identifier_uris = [var.api_expose_url]
 
   feature_tags {
     enterprise = true

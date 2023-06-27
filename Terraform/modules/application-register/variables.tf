@@ -16,3 +16,9 @@ variable "app_source" {
   type        = string
   default     = ""
 }
+
+
+variable "api_expose_url" {
+  type = string
+  default = ""
+}

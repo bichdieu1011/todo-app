@@ -27,18 +27,18 @@ provider "azurerm" {
 }
 
 module "resource-group" {
-  source          = "./modules/resource-group"
-  resource_group  = var.resource_group
-  deploy_location = var.deploy_location
+  source                  = "./modules/resource-group"
+  resource_group          = var.resource_group
+  deploy_location         = var.deploy_location
   azure_devops_project_id = var.azure_devops_project_id
 }
 
 
-module "app_db"{
-  source = "./modules/database"  
+module "app_db" {
+  source          = "./modules/database"
   depends_on      = [module.resource-group]
-  admin_username = var.sql_server_admin
-  admin_password = var.sql_server_admin_password
+  admin_username  = var.sql_server_admin
+  admin_password  = var.sql_server_admin_password
   resource_group  = var.resource_group
   deploy_location = var.deploy_location
   environment     = var.environment
@@ -47,26 +47,27 @@ module "app_db"{
 
 }
 
-module "app_register"{
-  source = "./modules/application-register"  
+module "app_register" {
+  source          = "./modules/application-register"
+  aapi_expose_url = "api://ar-interview-us-demoapp-1"
   depends_on      = [module.resource-group]
 }
 
-module "app_key_vault"{
-  source = "./modules/key-vaults"
-  resource_group  = var.resource_group
-  deploy_location = var.deploy_location
-  environment     = var.environment
-  department      = var.department
-  app_source      = var.app_source
+module "app_key_vault" {
+  source                  = "./modules/key-vaults"
+  resource_group          = var.resource_group
+  deploy_location         = var.deploy_location
+  environment             = var.environment
+  department              = var.department
+  app_source              = var.app_source
   azure_devops_project_id = var.azure_devops_project_id
-  application_object_id = module.app_register.application_principle_id
-  depends_on      = [module.resource-group, module.app_register]
+  application_object_id   = module.app_register.application_principle_id
+  depends_on              = [module.resource-group, module.app_register]
 }
 
-module "app_key_vault_secret"{
-  source = "./modules/key-vaults/secret"  
-  depends_on      = [module.app_db, module.app_key_vault]
+module "app_key_vault_secret" {
+  source       = "./modules/key-vaults/secret"
+  depends_on   = [module.app_db, module.app_key_vault]
   key_vault_id = module.app_key_vault.key_vault_id
   secret = {
     connectionString = "Server=tcp:${module.app_db.sql_server_name}.database.windows.net,1433;Initial Catalog=${module.app_db.sql_database_name};Persist Security Info=False;User ID=${var.sql_server_admin};Password=${var.sql_server_admin_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
@@ -74,16 +75,17 @@ module "app_key_vault_secret"{
 }
 
 module "webapplication" {
-  source          = "./modules/web-application"
-  resource_group  = var.resource_group
-  deploy_location = "eastus"
-  environment     = var.environment
-  department      = var.department
-  app_source      = var.app_source
-  client_id       = module.app_register.client_id
-  tenant_id       = var.tenant_id
-  client_secret   = module.app_register.client_secret
+  source                  = "./modules/web-application"
+  resource_group          = var.resource_group
+  deploy_location         = "eastus"
+  environment             = var.environment
+  department              = var.department
+  app_source              = var.app_source
+  client_id               = module.app_register.client_id
+  tenant_id               = var.tenant_id
+  client_secret           = module.app_register.client_secret
   azure_devops_project_id = var.azure_devops_project_id
-  keyvault_name   = module.app_key_vault.key_vault_name
-  depends_on      = [module.resource-group,  module.app_register, module.app_db, module.app_key_vault]
+  keyvault_name           = module.app_key_vault.key_vault_name
+  api_expose_url         = "api://ar-interview-us-demoapp-1"
+  depends_on              = [module.resource-group, module.app_register, module.app_db, module.app_key_vault]
 }

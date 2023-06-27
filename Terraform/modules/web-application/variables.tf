@@ -59,3 +59,8 @@ variable "azure_devops_project_id" {
   type = string
   default = ""
 }
+
+variable "api_expose_url" {
+  type = string
+  default = ""
+}

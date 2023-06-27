@@ -60,6 +60,7 @@ locals {
     "AzureAd__ClientId"     = var.client_id
     "AzureAd__ClientSecret" = var.client_secret
     "AzureAd__KeyVaultName" = var.keyvault_name
+    "AzureAd__Audience"     = var.api_expose_url
 
     AllowAngularOrigins = "https://${azurerm_static_site.demoapp_client.default_host_name}"
   }
@@ -82,7 +83,7 @@ resource "azurerm_windows_web_app" "demoapp_api" {
     detailed_error_messages = true
 
     application_logs {
-      file_system_level = "Info"
+      file_system_level = "Information"
     }
 
   }
