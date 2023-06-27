@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using TodoApp.Database.Entities;
 using TodoApp.Services.Models;
 using TodoApp.Services.UserService.Service;
 
@@ -23,8 +24,8 @@ namespace TodoApp.WebApp.Identity
         {
             get
             {
-                var profile = Task.FromResult(GetUserId()).Result;
-                return profile != null ? profile.Id : 0;
+                var profile = GetUserId().Result;
+                return profile != null ? profile : 0;
             }
         }
 
@@ -38,7 +39,7 @@ namespace TodoApp.WebApp.Identity
                 var email = _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _emailClaim)?.Value;
                 var identifierObjectId = _context.HttpContext.User.Claims?.FirstOrDefault(s => s.Type == _objectIdentifierClaim)?.Value;
 
-                if (_cache.TryGetValue(identifierObjectId, out UserProfile userProfile))
+                if (_cache.TryGetValue($"_userObjectId:{identifierObjectId.ToLower()}", out UserProfile userProfile))
                 {
                     return userProfile.Id;
                 }
