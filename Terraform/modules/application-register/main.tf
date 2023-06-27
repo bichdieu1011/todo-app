@@ -6,6 +6,9 @@ resource "azuread_application" "demo_application_registry" {
 
   identifier_uris = ["api://ar-interview-us-demoapp-1"]
 
+  feature_tags {
+    enterprise = true
+  }
   required_resource_access {
     resource_app_id = "00000003-0000-0000-c000-000000000000" # Microsoft Graph
 
@@ -17,8 +20,6 @@ resource "azuread_application" "demo_application_registry" {
 
   api {
     requested_access_token_version = 1
-
-    mapped_claims_enabled = true
 
     oauth2_permission_scope {
       admin_consent_description  = "Allow the application to access example on behalf of the signed-in user."
