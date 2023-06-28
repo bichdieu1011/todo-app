@@ -5,7 +5,6 @@ using TodoApp.Database;
 using TodoApp.Database.Entities;
 using TodoApp.Services.ActionItemService.Models;
 using TodoApp.Services.Models;
-using TodoApp.Services.UserService.Service;
 using static TodoApp.Services.Constant;
 
 namespace TodoApp.Services.ActionItemService

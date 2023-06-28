@@ -11,6 +11,7 @@ namespace TodoApp.Services.CategoryService.Mapper
             CreateMap<Category, CategoryModel>();
 
             CreateMap<CategoryModel, Category>()
+                .ForMember(s => s.Name, x => x.MapFrom(s => s.Name.Trim()))
                 .ForMember(s => s.Id, x => x.Ignore())
                 .ForMember(s => s.IsActive, x => x.MapFrom(x => true));
         }

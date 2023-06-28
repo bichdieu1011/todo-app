@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpBackend } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpBackend, HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { IActionItem } from "../action-item/model/actionItem";
@@ -9,6 +9,8 @@ import { IActionItemList } from "./model/actionItemList";
 import { WidgetType } from "../shared/enums/WidgetType";
 import { UpdateActionItemStatus } from "./model/updateActionItemStatusModel";
 import { ActionItemStatus } from "../shared/enums/ActionItemStatus";
+import { error } from "console";
+import { of } from 'rxjs';
 
 @Injectable()
 export class ActionItemService {
@@ -36,23 +38,25 @@ export class ActionItemService {
         );
     }
 
-    async add(record: IActionItem): Promise<Observable<IActionResultModel>> {
+    add(record: IActionItem): Observable<IActionResultModel> {
         let url = this.baseUrl + 'actionItem';
 
-        return this.http.post(url, record).pipe<IActionResultModel>(
+        return this.http.post(url, record).pipe(
             tap((res: any) => {
                 return res;
-            })
+            }),
+            catchError(this.handleError)
         );
     }
 
     async remove(record: IActionItem): Promise<Observable<IActionResultModel>> {
         let url = this.baseUrl + 'actionItem/' + record.id;
 
-        return this.http.delete(url).pipe<IActionResultModel>(
+        return this.http.delete(url).pipe(
             tap((res: any) => {
                 return res;
-            })
+            }),
+            catchError(this.handleError)
         );
     }
 
@@ -65,28 +69,23 @@ export class ActionItemService {
             newStatus: checked ? ActionItemStatus.Done : ActionItemStatus.Open
         };
 
-        return this.http.put(url, model).pipe<IActionResultModel>(
+        return this.http.put(url, model).pipe(
             tap((res: any) => {
                 return res;
-            })
+            }),
+            catchError(this.handleError)
         );
     }
 
-    private handleError(error: any): any {
-        if (error.error instanceof ErrorEvent) {
-            // A client-side or network error occurred. Handle it accordingly.
-            console.error('Client side network error occurred:', error.error.message);
-        } else {
-            // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            console.error('Backend - ' +
-                `status: ${error.status}, ` +
-                `statusText: ${error.statusText}, ` +
-                `message: ${error.error.message}`);
-        }
+    private handleError(error: HttpErrorResponse): Observable<IActionResultModel> {
+        console.log('Backend - ' +
+            `status: ${error.status}, ` +
+            `statusText: ${error.statusText}, ` +
+            `message: ${error.error.errors}`);
 
-        // return an observable with a user-facing error message
-        var res: IActionResultModel = { result: Result.Error, messages: ["An error occurs!"] };
-        return res;
+        var messages = error.error.errors[Object.keys(error.error.errors)[0]];
+        var res: IActionResultModel = { result: Result.Error, messages: messages };
+
+        return of(res);
     }
 }

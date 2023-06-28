@@ -87,12 +87,9 @@ export class AddActionItemComponent implements OnInit, OnDestroy {
 
     onNoClick(): void {
         this.dialogRef.close();
-
     }
 
     ngOnDestroy(): void {
         this.record = new IActionItem();        
     }
-
-
 }

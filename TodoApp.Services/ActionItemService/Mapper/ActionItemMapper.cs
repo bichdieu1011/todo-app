@@ -14,6 +14,7 @@ namespace TodoApp.Services.ActionItemService.Mapper
             CreateMap<ActionItemModel, ActionItem>()
                 .ForMember(s => s.Id, x => x.Ignore())
                 .ForMember(s => s.Status, x => x.Ignore())
+                .ForMember(s => s.Content, x => x.MapFrom(m => m.Content.Trim()))
                 .ForMember(s => s.Start, x => x.MapFrom(m => m.Start.Date))
                 .ForMember(s => s.End, x => x.MapFrom(m => m.End.Date))
                 .ForMember(s => s.Created, x => x.MapFrom(s => DateTime.Now))
