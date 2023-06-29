@@ -44,7 +44,7 @@ namespace TodoApp.Services.CategoryService.Service
             if (userId <= 0) throw new Exception("User is invalid");
 
             var checkDuplicated = dbContext.Set<Category>()
-                .Where(s => s.Name == record.Name && s.IsActive)
+                .Where(s => s.Name == record.Name && s.UserId == userId && s.IsActive)
                 .Any();
             if (checkDuplicated)
             {
