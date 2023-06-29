@@ -153,9 +153,7 @@ export class ActionItemComponent implements OnInit, OnDestroy {
                 });
 
                 this.widgetDetails[type].pageIndex = 0;
-                this.loadWidget(type, this.widgetDetails[type])
-                    .then(s => this.spinner.hide());
-
+                this.onViewListActionItem(this.categoryId);
             });
         });
 
@@ -177,7 +175,7 @@ export class ActionItemComponent implements OnInit, OnDestroy {
                 data: notification,
                 duration: 3000
             });
-            this.loadWidget(type, this.widgetDetails[type]).then(s => this.spinner.hide());
+            this.onViewListActionItem(this.categoryId);
         });
 
     }
