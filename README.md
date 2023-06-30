@@ -1,6 +1,6 @@
 # Todo App
 
-
+This repository is setup to build and deploy in Azure Devops
 To run the project locally, need to follow these step
 
 1. create Azure resource, using terraform script in Terraform folder
