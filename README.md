@@ -10,13 +10,13 @@ To run the project locally, you need to follow these step
 5. start the Angular project
 
 # Setup Azure Pipeline
-To buid the project in Azure using Azure DevOps, developer could setup the Azure pipelines using these yaml files:
+To build the project in Azure using Azure DevOps, a developer could setup the Azure pipelines using these .yml files:
 1. azure-pipelines-for-terraform.yml
 2. azure-pipelines-buid-deploy-web-api.yml
 3. azure-pipelines-build-deploy-web-frontend.yml
 >
-To deploy the project using Azure DevOps, developers need to setup deploys resources following this order: Terraform -> Web Api -> Web FrontEnd, sample of an pipeline as below
->Below is saple of Terraform release pipeline
+To deploy the project using Azure DevOps, developers need to setup deploys resources following this order: Terraform -> Web Api -> Web FrontEnd, a sample of a pipeline as below
+>Pipeline to release script manage Azure resources using Terraform
 >![image](https://github.com/bichdieu1011/todo-app/assets/3540949/4b2e878d-821e-4f54-ac7e-5771e3bd45ed)
 >![image](https://github.com/bichdieu1011/todo-app/assets/3540949/064250bf-720d-48ca-82a0-0fb4c847a3e6)
 
